@@ -1,0 +1,304 @@
+/**
+ * AI Banking GRC Platform - Main Application Styles
+ * 
+ * @package    AI-Banking-GRC-Platform
+ * @version    1.0.0
+ * @author     GRC Platform Team
+ * @copyright  2026 AI Banking GRC Platform
+ * @license    Proprietary
+ * 
+ * This file contains the main application styles.
+ * It imports all component styles and defines global variables.
+ */
+
+/* ============================================================
+   IMPORTS
+   ============================================================ */
+
+@import url('theme.css');
+@import url('utilities.css');
+@import url('sidebar.css');
+@import url('topbar.css');
+@import url('cards.css');
+@import url('buttons.css');
+@import url('forms.css');
+@import url('tables.css');
+@import url('charts.css');
+@import url('alerts.css');
+@import url('footer.css');
+
+/* ============================================================
+   GLOBAL RESET & BASE
+   ============================================================ */
+
+:root {
+    --primary: #0B3D91;
+    --primary-light: #1a5bbf;
+    --primary-dark: #082b6e;
+    --secondary: #2563EB;
+    --accent: #00B894;
+    --bg-light: #F4F7FC;
+    --bg-white: #FFFFFF;
+    --text-dark: #1E293B;
+    --text-light: #64748B;
+    --border: #E2E8F0;
+    --success: #22C55E;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --info: #3B82F6;
+    --sidebar-width: 260px;
+    --sidebar-collapsed: 72px;
+    --topbar-height: 70px;
+    --footer-height: 60px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    --shadow-xl: 0 12px 36px rgba(0,0,0,0.16);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background: var(--bg-light);
+    overflow-x: hidden;
+}
+
+a {
+    color: var(--secondary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+/* ============================================================
+   APP WRAPPER
+   ============================================================ */
+
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-main {
+    display: flex;
+    flex: 1;
+    margin-top: var(--topbar-height);
+}
+
+.app-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    min-height: calc(100vh - var(--topbar-height) - var(--footer-height));
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.app-content.expanded {
+    margin-left: var(--sidebar-collapsed);
+}
+
+/* ============================================================
+   PAGE CONTENT
+   ============================================================ */
+
+.page-content {
+    flex: 1;
+    padding: 24px 30px 30px;
+}
+
+/* ============================================================
+   SCROLLBAR STYLING
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F1F5F9;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+/* ============================================================
+   SELECTION COLOR
+   ============================================================ */
+
+::selection {
+    background: var(--secondary);
+    color: #fff;
+}
+
+::-moz-selection {
+    background: var(--secondary);
+    color: #fff;
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+.text-primary { color: var(--primary) !important; }
+.text-secondary { color: var(--secondary) !important; }
+.text-success { color: var(--success) !important; }
+.text-danger { color: var(--danger) !important; }
+.text-warning { color: var(--warning) !important; }
+.text-info { color: var(--info) !important; }
+.text-muted { color: var(--text-light) !important; }
+
+.bg-primary { background: var(--primary) !important; }
+.bg-secondary { background: var(--secondary) !important; }
+.bg-success { background: var(--success) !important; }
+.bg-danger { background: var(--danger) !important; }
+.bg-warning { background: var(--warning) !important; }
+.bg-info { background: var(--info) !important; }
+.bg-light { background: var(--bg-light) !important; }
+.bg-white { background: var(--bg-white) !important; }
+
+.rounded-sm { border-radius: var(--radius-sm) !important; }
+.rounded-md { border-radius: var(--radius-md) !important; }
+.rounded-lg { border-radius: var(--radius-lg) !important; }
+.rounded-xl { border-radius: var(--radius-xl) !important; }
+
+.shadow-sm { box-shadow: var(--shadow-sm) !important; }
+.shadow-md { box-shadow: var(--shadow-md) !important; }
+.shadow-lg { box-shadow: var(--shadow-lg) !important; }
+.shadow-xl { box-shadow: var(--shadow-xl) !important; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+.slide-in {
+    animation: slideIn 0.4s ease;
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+
+@media print {
+    .sidebar, .topbar, .app-footer, .no-print {
+        display: none !important;
+    }
+    
+    .app-content {
+        margin-left: 0 !important;
+        padding: 20px !important;
+    }
+    
+    .page-content {
+        padding: 0 !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+}
+
+/* ============================================================
+   DARK MODE SUPPORT
+   ============================================================ */
+
+body.dark-mode {
+    --bg-light: #0F172A;
+    --bg-white: #1E293B;
+    --text-dark: #F1F5F9;
+    --text-light: #94A3B8;
+    --border: #334155;
+}
+
+body.dark-mode .card {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+body.dark-mode .widget-card {
+    background: #1E293B;
+}
+
+body.dark-mode .table {
+    color: #F1F5F9;
+}
+
+body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+    background: #1E293B;
+}
+
+/* ============================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================ */
+
+@media (max-width: 992px) {
+    .app-content {
+        margin-left: 0 !important;
+    }
+    
+    .page-content {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-content {
+        padding: 12px;
+    }
+}

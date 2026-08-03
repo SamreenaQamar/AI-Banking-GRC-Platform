@@ -1,0 +1,45 @@
+
+---
+
+## 131. storage/logs/.gitkeep - Logs Git Placeholder
+
+**File Location:** `storage/logs/.gitkeep`
+
+**Purpose:** Ensures logs directory exists in Git repository.
+
+```text
+# ============================================================
+# Logs Directory - Git Placeholder
+# ============================================================
+# This file ensures the logs directory is tracked by Git.
+# The actual log files are excluded via .gitignore.
+# ============================================================
+
+# The logs directory is used by the application to store:
+# - Error logs
+# - Access logs
+# - Activity logs
+# - Security logs
+# - Audit logs
+
+# This file ensures the directory structure exists
+# when cloning the repository.
+
+# Git ignore rules should exclude:
+# *.log
+# *.log.*
+# *.log-*
+# *.txt
+# *.tmp
+
+# Directory permissions should be:
+# - Owner: web server user
+# - Group: web server group
+# - Permissions: 0750
+
+# Log files should have permissions:
+# - Owner: web server user
+# - Group: web server group
+# - Permissions: 0640
+
+# For more information, see README.md

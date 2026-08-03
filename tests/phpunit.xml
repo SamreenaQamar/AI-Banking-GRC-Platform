@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+================================================================
+AI Banking GRC Platform - PHPUnit Configuration
+================================================================
+This file configures PHPUnit for the AI Banking GRC Platform
+test suite. It defines test suites, coverage reporting, and
+test environment settings.
+================================================================
+-->
+
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
+    bootstrap="bootstrap.php"
+    colors="true"
+    verbose="true"
+    cacheDirectory=".phpunit.cache"
+    backupGlobals="false"
+    backupStaticAttributes="false"
+    beStrictAboutCoversAnnotation="true"
+    beStrictAboutOutputDuringTests="true"
+    beStrictAboutTestsThatDoNotTestAnything="true"
+    beStrictAboutTodoAnnotatedTests="true"
+    beStrictAboutResourceUsageDuringSmallTests="true"
+    convertDeprecationsToExceptions="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    displayDetailsOnIncompleteTests="true"
+    displayDetailsOnSkippedTests="true"
+    displayDetailsOnTestsThatTriggerDeprecations="true"
+    displayDetailsOnTestsThatTriggerErrors="true"
+    displayDetailsOnTestsThatTriggerNotices="true"
+    displayDetailsOnTestsThatTriggerWarnings="true"
+    failOnDeprecation="false"
+    failOnPhpunitDeprecation="false"
+    failOnRisky="true"
+    failOnWarning="false"
+    stopOnDefect="false"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnSkipped="false"
+    testdox="false"
+    timeoutForMediumTests="10"
+    timeoutForLargeTests="60"
+>
+    <!--
+    ============================================================
+    TEST SUITES
+    ============================================================
+    -->
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>Unit</directory>
+        </testsuite>
+
+        <testsuite name="Feature">
+            <directory>Feature</directory>
+        </testsuite>
+
+        <testsuite name="Integration">
+            <directory>Integration</directory>
+        </testsuite>
+
+        <testsuite name="All">
+            <directory>Unit</directory>
+            <directory>Feature</directory>
+            <directory>Integration</directory>
+        </testsuite>
+    </testsuites>
+
+    <!--
+    ============================================================
+    COVERAGE REPORTING
+    ============================================================
+    -->
+    <coverage
+        includeUncoveredFiles="true"
+        processUncoveredFiles="true"
+        pathCoverage="false"
+        ignoreDeprecatedCodeUnits="true"
+        disableCodeCoverageIgnore="false"
+    >
+        <report>
+            <clover outputFile="reports/clover.xml"/>
+            <html outputDirectory="reports/html" />
+            <text outputFile="reports/coverage.txt"/>
+            <xml outputDirectory="reports/xml"/>
+        </report>
+
+        <!--
+        ============================================================
+        COVERAGE FILTER
+        ============================================================
+        -->
+        <include>
+            <directory suffix=".php">../app</directory>
+            <directory suffix=".php">../modules</directory>
+        </include>
+
+        <exclude>
+            <directory suffix=".php">../app/Views</directory>
+            <directory suffix=".php">../app/Assets</directory>
+            <directory suffix=".php">../app/Config</directory>
+            <directory suffix=".php">../database</directory>
+            <directory suffix=".php">../storage</directory>
+            <directory suffix=".php">../public</directory>
+        </exclude>
+    </coverage>
+
+    <!--
+    ============================================================
+    PHP SETTINGS
+    ============================================================
+    -->
+    <php>
+        <ini name="display_errors" value="1" />
+        <ini name="error_reporting" value="-1" />
+        <ini name="memory_limit" value="512M" />
+        <ini name="date.timezone" value="Asia/Karachi" />
+
+        <!-- Database configuration for tests -->
+        <env name="APP_ENV" value="testing"/>
+        <env name="DB_HOST" value="localhost"/>
+        <env name="DB_DATABASE" value="grc_platform_test"/>
+        <env name="DB_USERNAME" value="root"/>
+        <env name="DB_PASSWORD" value=""/>
+    </php>
+</phpunit>

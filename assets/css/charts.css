@@ -1,0 +1,192 @@
+/**
+ * AI Banking GRC Platform - Chart Styles
+ * 
+ * This file contains styles for Chart.js and other chart components
+ */
+
+/* ============================================================
+   CHART CONTAINER
+   ============================================================ */
+
+.chart-container {
+    position: relative;
+    height: 250px;
+    width: 100%;
+}
+
+.chart-container-sm {
+    height: 200px;
+}
+
+.chart-container-lg {
+    height: 350px;
+}
+
+.chart-wrapper {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+}
+
+.chart-wrapper .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.chart-wrapper .chart-title {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 16px;
+    margin: 0;
+}
+
+.chart-wrapper .chart-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* ============================================================
+   CHART TYPES
+   ============================================================ */
+
+/* Line Chart */
+.line-chart .chart-line {
+    stroke-width: 2;
+}
+
+.line-chart .chart-point {
+    stroke-width: 2;
+}
+
+/* Bar Chart */
+.bar-chart .chart-bar {
+    border-radius: 4px 4px 0 0;
+}
+
+/* Doughnut/Pie Chart */
+.doughnut-chart .chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.doughnut-chart .chart-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+.doughnut-chart .chart-legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+/* Heatmap */
+.heatmap-chart .heatmap-grid {
+    display: grid;
+    gap: 2px;
+}
+
+.heatmap-chart .heatmap-cell {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    transition: var(--transition);
+}
+
+.heatmap-chart .heatmap-cell:hover {
+    transform: scale(1.05);
+}
+
+/* ============================================================
+   CHART LEGEND
+   ============================================================ */
+
+.chart-legend-custom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 12px 0;
+}
+
+.chart-legend-custom .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.chart-legend-custom .legend-item:hover {
+    color: var(--text-dark);
+}
+
+.chart-legend-custom .legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+/* ============================================================
+   CHART TOOLTIP
+   ============================================================ */
+
+.chart-tooltip {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    box-shadow: var(--shadow-md);
+}
+
+.chart-tooltip .tooltip-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 13px;
+}
+
+.chart-tooltip .tooltip-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* ============================================================
+   RESPONSIVE CHARTS
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 200px;
+    }
+    
+    .chart-container-lg {
+        height: 250px;
+    }
+    
+    .chart-wrapper {
+        padding: 12px;
+    }
+    
+    .chart-wrapper .chart-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 576px) {
+    .chart-container {
+        height: 180px;
+    }
+}

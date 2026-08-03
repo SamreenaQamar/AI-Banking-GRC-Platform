@@ -1,0 +1,155 @@
+<!-- 
+================================================================
+AI Banking GRC Platform - Favicon Instructions
+================================================================
+
+This file is a placeholder for the favicon.ico file.
+The actual favicon should be a multi-size icon file.
+
+================================================================
+HOW TO CREATE THE FAVICON
+================================================================
+
+1. Create a favicon using one of these methods:
+   - Use an online favicon generator (realfavicongenerator.net)
+   - Create a 256x256 PNG and convert to .ico
+   - Use a design tool to create the icon
+
+2. The icon should feature:
+   - Primary Color: #0B3D91 (Dark Blue)
+   - Secondary Color: #2563EB (Blue)
+   - Symbol: GRC or Shield icon
+   - Clean, professional banking design
+
+3. Recommended sizes in .ico file:
+   - 16x16
+   - 32x32
+   - 48x48
+   - 64x64
+   - 128x128
+   - 256x256
+
+================================================================
+WHERE TO PLACE
+================================================================
+
+Place the favicon.ico file in the public/ directory:
+/public/favicon.ico
+
+The browser will automatically detect it, but it's also linked in:
+- layouts/master.php: <link rel="icon" type="image/x-icon" href="/favicon.ico">
+- layouts/header.php: <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+================================================================
+ADDITIONAL ICON FILES
+================================================================
+
+For better browser support, also create these files in the 
+public/ directory:
+
+1. apple-touch-icon.png (180x180)
+   - Used by iOS devices
+   - Place at: /apple-touch-icon.png
+
+2. android-chrome-192x192.png
+   - Used by Android devices
+   - Place at: /android-chrome-192x192.png
+
+3. android-chrome-512x512.png
+   - Used by Android devices
+   - Place at: /android-chrome-512x512.png
+
+4. mstile-150x150.png
+   - Used by Windows devices
+   - Place at: /mstile-150x150.png
+
+5. safari-pinned-tab.svg
+   - Used by Safari browser
+   - Place at: /safari-pinned-tab.svg
+
+================================================================
+HOW TO GENERATE ALL ICONS
+================================================================
+
+1. Go to https://realfavicongenerator.net/
+2. Upload your design (recommended 260x260)
+3. Download the generated package
+4. Extract the files to your project root
+
+The generator will create:
+- favicon.ico
+- android-chrome-*.png
+- apple-touch-icon.png
+- mstile-*.png
+- safari-pinned-tab.svg
+- browserconfig.xml
+- site.webmanifest
+
+================================================================
+REFERENCE HTML FOR HEAD SECTION
+================================================================
+
+Include these in the <head> section of your layout:
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0B3D91">
+<meta name="msapplication-TileColor" content="#0B3D91">
+<meta name="theme-color" content="#0B3D91">
+
+================================================================
+CREATING A SIMPLE FAVICON (Quick Method)
+================================================================
+
+If you need a quick favicon, create a 256x256 PNG with:
+
+1. A dark blue background (#0B3D91)
+2. White text "GRC" in bold
+3. A shield icon or banking symbol
+4. Save as favicon.png
+5. Convert to .ico using: https://convertio.co/png-ico/
+
+================================================================
+DESIGN RECOMMENDATIONS
+================================================================
+
+The favicon should represent:
+- Banking & Finance: Use shield, building, or bank symbol
+- Technology: Clean, modern design
+- Trust & Security: Professional and reliable appearance
+
+Color Palette:
+- Primary: #0B3D91 (Dark Blue)
+- Secondary: #2563EB (Blue)
+- Accent: #00B894 (Green)
+- White: #FFFFFF
+- Gold: #F59E0B
+
+================================================================
+PLACEHOLDER FILES
+================================================================
+
+If you haven't created the favicon yet, create a simple placeholder:
+
+1. Create a 16x16 transparent PNG
+2. Fill with dark blue (#0B3D91)
+3. Add a white "G" or "GRC" text
+4. Save as favicon.ico
+
+This will serve as a temporary favicon until you design a professional one.
+
+================================================================
+SAMPLE ICO CREATION COMMAND (Linux/Mac)
+================================================================
+
+Using ImageMagick:
+convert -size 256x256 xc:#0B3D91 -font Arial -pointsize 120 -fill white -gravity center -draw "text 0,0 'GRC'" favicon.png
+convert favicon.png -define icon:auto-resize=16,32,48,64,128,256 favicon.ico
+
+================================================================
+-->
+
+<!-- This is a comment placeholder for favicon.ico -->
+<!-- The actual favicon.ico file should be placed in the public/ directory -->

@@ -1,0 +1,38 @@
+
+---
+
+## 128. storage/cache/.gitkeep - Cache Git Placeholder
+
+**File Location:** `storage/cache/.gitkeep`
+
+**Purpose:** Ensures cache directory exists in Git repository.
+
+```text
+# ============================================================
+# Cache Directory - Git Placeholder
+# ============================================================
+# This file ensures the cache directory is tracked by Git.
+# The actual cache files are excluded via .gitignore.
+# ============================================================
+
+# The cache directory is used by the application to store:
+# - Query result cache
+# - View compiled templates
+# - Route cache
+# - API response cache
+# - Metadata cache
+
+# This file ensures the directory structure exists
+# when cloning the repository.
+
+# Git ignore rules should exclude:
+# *.cache
+# *.tmp
+# *.serialized
+
+# Directory permissions should be:
+# - Owner: web server user
+# - Group: web server group
+# - Permissions: 0755
+
+# For more information, see README.md

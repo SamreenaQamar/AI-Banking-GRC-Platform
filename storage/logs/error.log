@@ -33,3 +33,45 @@ Stack trace:
 #2 D:\xampp\htdocs\AI-Banking-GRC-Platform\index.php(349): App\Controllers\ErrorController->__construct()
 #3 {main}
   thrown in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php on line 86
+[03-Aug-2026 15:04:56 Asia/Karachi] PHP Fatal error:  Uncaught Error: Class "App\Helpers\Auth" not found in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php:86
+Stack trace:
+#0 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php(62): App\Controllers\BaseController->loadCurrentUser()
+#1 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\AuthController.php(54): App\Controllers\BaseController->__construct()
+#2 D:\xampp\htdocs\AI-Banking-GRC-Platform\index.php(349): App\Controllers\AuthController->__construct()
+#3 {main}
+  thrown in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php on line 86
+[03-Aug-2026 15:04:59 Asia/Karachi] PHP Fatal error:  Uncaught Error: Class "App\Helpers\Auth" not found in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php:86
+Stack trace:
+#0 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php(62): App\Controllers\BaseController->loadCurrentUser()
+#1 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\AuthController.php(54): App\Controllers\BaseController->__construct()
+#2 D:\xampp\htdocs\AI-Banking-GRC-Platform\index.php(349): App\Controllers\AuthController->__construct()
+#3 {main}
+  thrown in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php on line 86
+[03-Aug-2026 15:36:46 Asia/Karachi] PHP Fatal error:  Uncaught Error: Class "App\Helpers\Auth" not found in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php:86
+Stack trace:
+#0 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php(62): App\Controllers\BaseController->loadCurrentUser()
+#1 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\AuthController.php(54): App\Controllers\BaseController->__construct()
+#2 D:\xampp\htdocs\AI-Banking-GRC-Platform\index.php(349): App\Controllers\AuthController->__construct()
+#3 {main}
+  thrown in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php on line 86
+[03-Aug-2026 15:36:46 Asia/Karachi] PHP Fatal error:  Uncaught Error: Class "App\Helpers\Auth" not found in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php:86
+Stack trace:
+#0 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php(62): App\Controllers\BaseController->loadCurrentUser()
+#1 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\AuthController.php(54): App\Controllers\BaseController->__construct()
+#2 D:\xampp\htdocs\AI-Banking-GRC-Platform\index.php(349): App\Controllers\AuthController->__construct()
+#3 {main}
+  thrown in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php on line 86
+[03-Aug-2026 15:36:49 Asia/Karachi] PHP Fatal error:  Uncaught Error: Class "App\Helpers\Auth" not found in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php:86
+Stack trace:
+#0 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php(62): App\Controllers\BaseController->loadCurrentUser()
+#1 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\AuthController.php(54): App\Controllers\BaseController->__construct()
+#2 D:\xampp\htdocs\AI-Banking-GRC-Platform\index.php(349): App\Controllers\AuthController->__construct()
+#3 {main}
+  thrown in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php on line 86
+[03-Aug-2026 15:36:59 Asia/Karachi] PHP Fatal error:  Uncaught Error: Class "App\Helpers\Auth" not found in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php:86
+Stack trace:
+#0 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php(62): App\Controllers\BaseController->loadCurrentUser()
+#1 D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\AuthController.php(54): App\Controllers\BaseController->__construct()
+#2 D:\xampp\htdocs\AI-Banking-GRC-Platform\index.php(349): App\Controllers\AuthController->__construct()
+#3 {main}
+  thrown in D:\xampp\htdocs\AI-Banking-GRC-Platform\app\Controllers\BaseController.php on line 86

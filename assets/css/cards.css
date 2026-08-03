@@ -1,0 +1,292 @@
+/**
+ * AI Banking GRC Platform - Card Styles
+ * 
+ * This file contains styles for card components
+ */
+
+/* ============================================================
+   BASE CARD
+   ============================================================ */
+
+.card {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================================
+   CARD HEADER
+   ============================================================ */
+
+.card-header {
+    background: transparent;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.card-header-gradient {
+    background: var(--gradient-primary);
+    color: #fff;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 16px 20px;
+    border-bottom: none;
+}
+
+.card-header-gradient .card-title {
+    color: #fff;
+}
+
+.card-header-gradient .card-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* ============================================================
+   CARD BODY
+   ============================================================ */
+
+.card-body {
+    padding: 20px;
+    flex: 1 1 auto;
+}
+
+.card-body.p-0 {
+    padding: 0;
+}
+
+/* ============================================================
+   CARD FOOTER
+   ============================================================ */
+
+.card-footer {
+    background: transparent;
+    border-top: 1px solid var(--border);
+    padding: 12px 20px;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* ============================================================
+   CARD TITLE & SUBTITLE
+   ============================================================ */
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+/* ============================================================
+   CARD SIZES
+   ============================================================ */
+
+.card-sm .card-body {
+    padding: 12px 16px;
+}
+
+.card-lg .card-body {
+    padding: 28px 32px;
+}
+
+/* ============================================================
+   CARD TYPES
+   ============================================================ */
+
+.card-primary {
+    border-left: 4px solid var(--primary);
+}
+
+.card-secondary {
+    border-left: 4px solid var(--secondary);
+}
+
+.card-success {
+    border-left: 4px solid var(--success);
+}
+
+.card-danger {
+    border-left: 4px solid var(--danger);
+}
+
+.card-warning {
+    border-left: 4px solid var(--warning);
+}
+
+.card-info {
+    border-left: 4px solid var(--info);
+}
+
+/* ============================================================
+   CARD STATS
+   ============================================================ */
+
+.card-stats {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.card-stats .stat-item {
+    text-align: center;
+}
+
+.card-stats .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.card-stats .stat-label {
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+/* ============================================================
+   CARD ACTIONS
+   ============================================================ */
+
+.card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.card-actions .btn {
+    font-size: 13px;
+    padding: 4px 12px;
+}
+
+/* ============================================================
+   CARD WIDGET
+   ============================================================ */
+
+.card-widget {
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-white);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    height: 100%;
+}
+
+.card-widget:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.card-widget .widget-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.card-widget .widget-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.card-widget .widget-label {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+/* ============================================================
+   CARD LIST
+   ============================================================ */
+
+.card-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.card-list-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-light);
+    transition: var(--transition);
+}
+
+.card-list-item:hover {
+    background: var(--bg-gray);
+}
+
+.card-list-item:last-child {
+    border-bottom: none;
+}
+
+.card-list-item .item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.card-list-item .item-content {
+    flex: 1;
+}
+
+.card-list-item .item-title {
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.card-list-item .item-subtitle {
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+.card-list-item .item-actions {
+    display: flex;
+    gap: 4px;
+}
+
+/* ============================================================
+   RESPONSIVE CARDS
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .card-body {
+        padding: 16px;
+    }
+    
+    .card-header {
+        padding: 12px 16px;
+    }
+    
+    .card-stats {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .card-actions {
+        flex-wrap: wrap;
+    }
+}

@@ -1,0 +1,280 @@
+/**
+ * AI Banking GRC Platform - Authentication Styles
+ * 
+ * This file contains styles for authentication pages (login, register, reset password)
+ */
+
+/* ============================================================
+   AUTH CONTAINER
+   ============================================================ */
+
+.auth-container {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.auth-card {
+    background: var(--bg-white);
+    border-radius: var(--radius-xl);
+    padding: 40px 36px;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-light);
+}
+
+/* ============================================================
+   AUTH BRAND
+   ============================================================ */
+
+.auth-brand {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-brand .logo-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.auth-brand .logo-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.auth-brand h2 {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 22px;
+    margin: 0;
+}
+
+.auth-brand p {
+    color: var(--text-light);
+    font-size: 14px;
+    margin: 4px 0 0;
+}
+
+/* ============================================================
+   AUTH FORM
+   ============================================================ */
+
+.auth-form .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-form .form-group label {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+}
+
+.auth-form .form-control {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    font-size: 14px;
+    transition: var(--transition);
+    font-family: var(--font-family);
+}
+
+.auth-form .form-control:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.auth-form .form-control-icon {
+    position: relative;
+}
+
+.auth-form .form-control-icon i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.auth-form .form-control-icon .form-control {
+    padding-left: 40px;
+}
+
+/* ============================================================
+   AUTH OPTIONS
+   ============================================================ */
+
+.auth-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.auth-options .form-check {
+    margin: 0;
+}
+
+.auth-options .form-check-label {
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.auth-options a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.auth-options a:hover {
+    color: var(--primary);
+}
+
+/* ============================================================
+   AUTH BUTTONS
+   ============================================================ */
+
+.btn-auth {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--secondary);
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    font-family: var(--font-family);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.btn-auth:hover {
+    background: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-auth:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-auth .spinner-border {
+    width: 20px;
+    height: 20px;
+}
+
+/* ============================================================
+   AUTH FOOTER
+   ============================================================ */
+
+.auth-footer {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-light);
+}
+
+.auth-footer a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.auth-footer a:hover {
+    color: var(--primary);
+}
+
+.auth-footer .register-link {
+    display: block;
+    margin-top: 8px;
+    color: var(--text-light);
+    font-weight: 400;
+}
+
+/* ============================================================
+   2FA CODE INPUT
+   ============================================================ */
+
+.code-inputs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.code-inputs .form-control {
+    width: 48px;
+    height: 56px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 0;
+    border-radius: var(--radius-md);
+}
+
+/* ============================================================
+   PASSWORD STRENGTH
+   ============================================================ */
+
+.password-strength {
+    margin-top: 8px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    overflow: hidden;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
+
+.password-strength-text {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+/* ============================================================
+   RESPONSIVE AUTH
+   ============================================================ */
+
+@media (max-width: 576px) {
+    .auth-card {
+        padding: 30px 20px;
+    }
+    
+    .auth-brand h2 {
+        font-size: 20px;
+    }
+    
+    .auth-options {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .code-inputs .form-control {
+        width: 40px;
+        height: 48px;
+        font-size: 20px;
+    }
+}

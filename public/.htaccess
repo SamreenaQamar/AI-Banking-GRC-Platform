@@ -1,0 +1,236 @@
+# ============================================================
+# AI Banking GRC Platform - Apache Configuration
+# ============================================================
+# This file configures Apache for the AI Banking GRC Platform
+# - URL Rewriting (Remove index.php)
+# - Security Headers
+# - File Access Restrictions
+# - Compression & Caching
+# - Error Pages
+# ============================================================
+
+# ============================================================
+# REWRITE ENGINE
+# ============================================================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Prevent directory listing
+    Options -Indexes
+    
+    # Set base path (adjust if application is in subdirectory)
+    RewriteBase /
+    
+    # Redirect to HTTPS (uncomment in production)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # Redirect www to non-www (uncomment in production)
+    # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    # RewriteRule ^(.*)$ https://%1%{REQUEST_URI} [L,R=301]
+    
+    # If the request is for a real file or directory, serve it directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    
+    # Route all other requests through index.php
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# ============================================================
+# SECURITY HEADERS
+# ============================================================
+
+<IfModule mod_headers.c>
+    # Prevent XSS attacks
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Prevent MIME type sniffing
+    Header set X-Content-Type-Options "nosniff"
+    
+    # Prevent clickjacking
+    Header set X-Frame-Options "DENY"
+    
+    # Referrer policy
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://code.jquery.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self';"
+    
+    # HSTS - Force HTTPS (uncomment in production)
+    # Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # Permissions Policy
+    Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+    
+    # Remove server information for security
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# ============================================================
+# FILE ACCESS RESTRICTIONS
+# ============================================================
+
+# Block access to sensitive files
+<FilesMatch "^(\.env|\.git|\.gitignore|\.htaccess|\.htpasswd|composer\.json|composer\.lock|package\.json|package-lock\.json|webpack\.mix\.js|phpunit\.xml|README\.md|LICENSE)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to PHP files in sensitive directories
+<IfModule mod_rewrite.c>
+    RewriteRule ^(app|config|database|modules|storage|tests)/.*\.php$ - [F,L]
+    RewriteRule ^\.git - [F,L]
+</IfModule>
+
+# Protect storage directory
+<IfModule mod_authz_core.c>
+    <Directory "storage">
+        Require all denied
+    </Directory>
+</IfModule>
+
+# ============================================================
+# ERROR PAGES
+# ============================================================
+
+ErrorDocument 400 /errors/400.html
+ErrorDocument 401 /errors/401.html
+ErrorDocument 403 /errors/403.html
+ErrorDocument 404 /errors/404.html
+ErrorDocument 405 /errors/405.html
+ErrorDocument 500 /errors/500.html
+ErrorDocument 503 /errors/503.html
+
+# ============================================================
+# COMPRESSION
+# ============================================================
+
+<IfModule mod_deflate.c>
+    # Compress HTML, CSS, JavaScript, Text, XML, and fonts
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/atom+xml
+    AddOutputFilterByType DEFLATE application/x-font-ttf
+    AddOutputFilterByType DEFLATE application/x-font-opentype
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+    AddOutputFilterByType DEFLATE image/svg+xml
+    
+    # Remove browser bugs
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    Header append Vary User-Agent
+</IfModule>
+
+# ============================================================
+# BROWSER CACHING
+# ============================================================
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Default expiration
+    ExpiresDefault "access plus 1 month"
+    
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # Fonts
+    ExpiresByType application/x-font-ttf "access plus 1 year"
+    ExpiresByType application/x-font-opentype "access plus 1 year"
+    ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    
+    # CSS & JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    
+    # HTML & XML
+    ExpiresByType text/html "access plus 1 day"
+    ExpiresByType application/xml "access plus 1 day"
+    
+    # JSON
+    ExpiresByType application/json "access plus 1 hour"
+</IfModule>
+
+# ============================================================
+# ETAGS
+# ============================================================
+
+<IfModule mod_headers.c>
+    FileETag None
+    Header unset ETag
+</IfModule>
+
+# ============================================================
+# CORS - Cross-Origin Resource Sharing
+# ============================================================
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|css|js)$">
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
+</IfModule>
+
+# ============================================================
+# PHP SETTINGS
+# ============================================================
+
+<IfModule mod_php8.c>
+    php_value upload_max_filesize 20M
+    php_value post_max_size 20M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+    php_value memory_limit 256M
+    php_value session.gc_maxlifetime 3600
+    php_value session.cookie_httponly 1
+    php_value session.cookie_secure 0
+    php_value session.use_only_cookies 1
+    php_value session.cookie_samesite Strict
+</IfModule>
+
+# ============================================================
+# ADDITIONAL SECURITY
+# ============================================================
+
+# Prevent access to hidden files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect against XSS attacks
+<IfModule mod_rewrite.c>
+    RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+    RewriteRule ^(.*)$ index.php [F,L]
+</IfModule>
+
+# ============================================================
+# PERFORMANCE OPTIMIZATIONS
+# ============================================================
+
+# Enable Keep-Alive
+<IfModule mod_headers.c>
+    Header set Connection keep-alive
+</IfModule>
+
+# Disable server signature
+ServerSignature Off

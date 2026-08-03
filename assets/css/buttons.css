@@ -1,0 +1,365 @@
+/**
+ * AI Banking GRC Platform - Button Styles
+ * 
+ * This file contains styles for button components
+ */
+
+/* ============================================================
+   BASE BUTTON
+   ============================================================ */
+
+.btn {
+    font-family: var(--font-family);
+    border-radius: var(--btn-radius);
+    font-weight: var(--btn-font-weight);
+    padding: var(--btn-padding);
+    transition: var(--btn-transition);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid transparent;
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ============================================================
+   BUTTON SIZES
+   ============================================================ */
+
+.btn-xs {
+    padding: 2px 8px;
+    font-size: 11px;
+    border-radius: 4px;
+}
+
+.btn-sm {
+    padding: 4px 12px;
+    font-size: 12px;
+}
+
+.btn-lg {
+    padding: 12px 28px;
+    font-size: 16px;
+}
+
+.btn-xl {
+    padding: 16px 36px;
+    font-size: 18px;
+}
+
+/* ============================================================
+   BUTTON VARIANTS
+   ============================================================ */
+
+.btn-primary {
+    background: var(--secondary);
+    border-color: var(--secondary);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    color: #fff;
+}
+
+.btn-secondary {
+    background: var(--bg-gray);
+    border-color: var(--border);
+    color: var(--text-dark);
+}
+
+.btn-secondary:hover {
+    background: var(--border);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+.btn-success {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
+}
+
+.btn-success:hover {
+    background: #16A34A;
+    border-color: #16A34A;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    color: #fff;
+}
+
+.btn-danger {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #DC2626;
+    border-color: #DC2626;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    color: #fff;
+}
+
+.btn-warning {
+    background: var(--warning);
+    border-color: var(--warning);
+    color: #000;
+}
+
+.btn-warning:hover {
+    background: #D97706;
+    border-color: #D97706;
+    color: #000;
+}
+
+.btn-info {
+    background: var(--info);
+    border-color: var(--info);
+    color: #fff;
+}
+
+.btn-info:hover {
+    background: #2563EB;
+    border-color: #2563EB;
+    color: #fff;
+}
+
+.btn-light {
+    background: var(--bg-white);
+    border-color: var(--border);
+    color: var(--text-dark);
+}
+
+.btn-light:hover {
+    background: var(--bg-gray);
+    border-color: var(--border-dark);
+}
+
+.btn-dark {
+    background: var(--text-dark);
+    border-color: var(--text-dark);
+    color: #fff;
+}
+
+.btn-dark:hover {
+    background: #000;
+    border-color: #000;
+    color: #fff;
+}
+
+/* ============================================================
+   OUTLINE BUTTONS
+   ============================================================ */
+
+.btn-outline-primary {
+    background: transparent;
+    border-color: var(--secondary);
+    color: var(--secondary);
+}
+
+.btn-outline-primary:hover {
+    background: var(--secondary);
+    color: #fff;
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text-light);
+}
+
+.btn-outline-secondary:hover {
+    background: var(--border);
+    color: var(--text-dark);
+}
+
+.btn-outline-success {
+    background: transparent;
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.btn-outline-success:hover {
+    background: var(--success);
+    color: #fff;
+}
+
+.btn-outline-danger {
+    background: transparent;
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.btn-outline-danger:hover {
+    background: var(--danger);
+    color: #fff;
+}
+
+.btn-outline-warning {
+    background: transparent;
+    border-color: var(--warning);
+    color: var(--warning);
+}
+
+.btn-outline-warning:hover {
+    background: var(--warning);
+    color: #000;
+}
+
+.btn-outline-light {
+    background: transparent;
+    border-color: #fff;
+    color: #fff;
+}
+
+.btn-outline-light:hover {
+    background: #fff;
+    color: var(--text-dark);
+}
+
+.btn-outline-dark {
+    background: transparent;
+    border-color: var(--text-dark);
+    color: var(--text-dark);
+}
+
+.btn-outline-dark:hover {
+    background: var(--text-dark);
+    color: #fff;
+}
+
+/* ============================================================
+   BUTTON VARIANTS
+   ============================================================ */
+
+.btn-block {
+    display: flex;
+    width: 100%;
+}
+
+.btn-rounded {
+    border-radius: 50px;
+}
+
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.btn-icon.btn-sm {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+}
+
+.btn-icon.btn-lg {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+}
+
+/* ============================================================
+   BUTTON GROUPS
+   ============================================================ */
+
+.btn-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-group .btn {
+    border-radius: 0;
+}
+
+.btn-group .btn:first-child {
+    border-radius: var(--btn-radius) 0 0 var(--btn-radius);
+}
+
+.btn-group .btn:last-child {
+    border-radius: 0 var(--btn-radius) var(--btn-radius) 0;
+}
+
+.btn-group .btn:not(:first-child):not(:last-child) {
+    border-radius: 0;
+}
+
+.btn-group .btn:not(:first-child) {
+    border-left: none;
+}
+
+/* ============================================================
+   BUTTON WITH ICONS
+   ============================================================ */
+
+.btn .btn-icon-left {
+    margin-right: 6px;
+}
+
+.btn .btn-icon-right {
+    margin-left: 6px;
+}
+
+/* ============================================================
+   BUTTON STATES
+   ============================================================ */
+
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.btn-loading .spinner-border,
+.btn-loading .spinner-grow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.btn-loading .btn-text {
+    opacity: 0;
+}
+
+/* ============================================================
+   RESPONSIVE BUTTONS
+   ============================================================ */
+
+@media (max-width: 576px) {
+    .btn {
+        font-size: 13px;
+        padding: 6px 14px;
+    }
+    
+    .btn-lg {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+    
+    .btn-block-mobile {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+    }
+}

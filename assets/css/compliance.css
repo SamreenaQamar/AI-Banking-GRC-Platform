@@ -1,0 +1,377 @@
+/**
+ * AI Banking GRC Platform - Compliance Module Styles
+ * 
+ * This file contains styles for the compliance module
+ */
+
+/* ============================================================
+   COMPLIANCE CONTAINER
+   ============================================================ */
+
+.compliance-container {
+    padding: 0;
+    animation: fadeIn 0.5s ease;
+}
+
+/* ============================================================
+   CIRCULAR CARDS
+   ============================================================ */
+
+.circular-card {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-light);
+}
+
+.circular-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.circular-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.circular-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.circular-badge.active { background: #D1FAE5; color: #10B981; }
+.circular-badge.pending { background: #FEF3C7; color: #F59E0B; }
+.circular-badge.implemented { background: #DBEAFE; color: #3B82F6; }
+.circular-badge.withdrawn { background: #FEE2E2; color: #EF4444; }
+
+.circular-category {
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.circular-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0 0 4px;
+}
+
+.circular-number {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    font-family: 'Courier New', monospace;
+}
+
+.circular-description {
+    font-size: 14px;
+    color: var(--text-light);
+    margin: 0;
+    flex: 1;
+    line-height: 1.6;
+}
+
+.circular-footer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+}
+
+.circular-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.circular-meta i {
+    margin-right: 4px;
+}
+
+.circular-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+/* ============================================================
+   COMPLIANCE STATUS
+   ============================================================ */
+
+.status-card {
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-white);
+    box-shadow: var(--shadow-sm);
+    height: 100%;
+    transition: var(--transition);
+    border-left: 4px solid transparent;
+}
+
+.status-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.status-card.compliant { border-left-color: var(--success); }
+.status-card.partial { border-left-color: var(--warning); }
+.status-card.non-compliant { border-left-color: var(--danger); }
+.status-card.total { border-left-color: var(--secondary); }
+
+.status-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
+
+.status-card-header i {
+    font-size: 16px;
+}
+
+.status-card.compliant .status-card-header i { color: var(--success); }
+.status-card.partial .status-card-header i { color: var(--warning); }
+.status-card.non-compliant .status-card-header i { color: var(--danger); }
+.status-card.total .status-card-header i { color: var(--secondary); }
+
+.status-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.status-count {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* ============================================================
+   GAP ANALYSIS
+   ============================================================ */
+
+.gap-card {
+    background: var(--bg-white);
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    height: 100%;
+    transition: var(--transition);
+}
+
+.gap-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.gap-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
+
+.gap-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.gap-change {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.gap-id {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: var(--secondary);
+}
+
+.severity-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.severity-badge.critical { background: #FEE2E2; color: #DC2626; }
+.severity-badge.high { background: #FEF3C7; color: #F59E0B; }
+.severity-badge.medium { background: #DBEAFE; color: #3B82F6; }
+.severity-badge.low { background: #D1FAE5; color: #10B981; }
+
+/* ============================================================
+   COMPLIANCE CHECKLIST
+   ============================================================ */
+
+.checklist-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-light);
+    transition: var(--transition);
+}
+
+.checklist-item:hover {
+    background: var(--bg-gray);
+}
+
+.checklist-item.completed {
+    background: #F0FDF4;
+}
+
+.checklist-item.completed .checklist-text {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+.checklist-checkbox-wrapper {
+    margin-right: 12px;
+    padding-top: 2px;
+}
+
+.checklist-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--secondary);
+}
+
+.checklist-content {
+    flex: 1;
+}
+
+.checklist-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.checklist-id {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--secondary);
+    font-weight: 600;
+}
+
+.checklist-text {
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.checklist-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* ============================================================
+   COMPLIANCE CALENDAR
+   ============================================================ */
+
+.compliance-calendar {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.calendar-day-header {
+    text-align: center;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-light);
+    padding: 8px 0;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    background: var(--bg-gray);
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+    transition: var(--transition);
+    min-height: 40px;
+}
+
+.calendar-day:hover {
+    background: var(--border-light);
+}
+
+.calendar-day.today {
+    background: var(--secondary);
+    color: #fff;
+}
+
+.calendar-day.has-event {
+    background: #DBEAFE;
+}
+
+.calendar-day .day-number {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.calendar-day .event-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--secondary);
+    margin-top: 2px;
+}
+
+/* ============================================================
+   RESPONSIVE COMPLIANCE
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .status-value {
+        font-size: 24px;
+    }
+    
+    .gap-value {
+        font-size: 24px;
+    }
+    
+    .circular-meta {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .calendar-day {
+        min-height: 30px;
+    }
+}

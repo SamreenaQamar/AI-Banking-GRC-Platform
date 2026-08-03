@@ -1,0 +1,395 @@
+/**
+ * AI Banking GRC Platform - Sidebar Styles
+ * 
+ * This file contains styles for the sidebar navigation
+ */
+
+/* ============================================================
+   SIDEBAR CONTAINER
+   ============================================================ */
+
+.sidebar {
+    position: fixed;
+    top: var(--topbar-height);
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    z-index: var(--z-fixed);
+    transition: var(--transition);
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed);
+}
+
+/* ============================================================
+   SIDEBAR INNER
+   ============================================================ */
+
+.sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px 0;
+}
+
+/* ============================================================
+   SIDEBAR HEADER
+   ============================================================ */
+
+.sidebar-header {
+    padding: 0 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo {
+    height: 32px;
+    width: auto;
+}
+
+.brand-text {
+    color: #fff;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+.sidebar.collapsed .brand-text {
+    display: none;
+}
+
+/* ============================================================
+   SIDEBAR NAVIGATION
+   ============================================================ */
+
+.sidebar-nav {
+    flex: 1;
+    padding: 16px 12px;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-item {
+    margin-bottom: 2px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    transition: var(--transition);
+    gap: 12px;
+    position: relative;
+    cursor: pointer;
+}
+
+.nav-link:hover {
+    background: var(--sidebar-hover);
+    color: #fff;
+}
+
+.nav-item.active .nav-link {
+    background: var(--sidebar-active);
+    color: #fff;
+}
+
+.nav-item.active .nav-link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 24px;
+    background: var(--secondary);
+    border-radius: 0 3px 3px 0;
+}
+
+.nav-icon {
+    width: 20px;
+    font-size: 16px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.nav-text {
+    font-size: 14px;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.sidebar.collapsed .nav-text,
+.sidebar.collapsed .nav-badge {
+    display: none;
+}
+
+.nav-badge {
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--secondary);
+    color: #fff;
+}
+
+.nav-badge.success { background: var(--success); }
+.nav-badge.warning { background: var(--warning); color: #000; }
+.nav-badge.danger { background: var(--danger); }
+.nav-badge.info { background: var(--info); }
+.nav-badge.primary { background: var(--secondary); }
+.nav-badge.gradient { 
+    background: var(--gradient-primary); 
+    color: #fff;
+}
+
+.nav-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+    margin: 12px 14px;
+}
+
+/* ============================================================
+   SIDEBAR SUBMENU
+   ============================================================ */
+
+.nav-submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease;
+}
+
+.nav-submenu.open {
+    max-height: 500px;
+}
+
+.nav-submenu .nav-link {
+    padding-left: 44px;
+    font-size: 13px;
+}
+
+.nav-submenu .nav-link::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.nav-submenu .nav-link:hover::before {
+    background: var(--secondary);
+}
+
+.nav-submenu .nav-item.active .nav-link::before {
+    background: var(--secondary);
+}
+
+/* ============================================================
+   SIDEBAR FOOTER
+   ============================================================ */
+
+.sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-dot.online {
+    background: var(--success);
+}
+
+.status-dot.offline {
+    background: var(--danger);
+}
+
+.status-dot.maintenance {
+    background: var(--warning);
+}
+
+.status-text {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 12px;
+}
+
+.sidebar-version {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+/* ============================================================
+   SIDEBAR COLLAPSED STATE
+   ============================================================ */
+
+.sidebar.collapsed .sidebar-header {
+    padding: 0 8px 16px;
+    text-align: center;
+}
+
+.sidebar.collapsed .brand-logo {
+    height: 28px;
+}
+
+.sidebar.collapsed .nav-link {
+    padding: 10px 8px;
+    justify-content: center;
+}
+
+.sidebar.collapsed .nav-icon {
+    font-size: 18px;
+}
+
+.sidebar.collapsed .nav-badge {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-footer {
+    padding: 16px 8px;
+    text-align: center;
+}
+
+.sidebar.collapsed .status-text {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-version {
+    display: none;
+}
+
+/* ============================================================
+   SIDEBAR TOGGLE BUTTON
+   ============================================================ */
+
+.sidebar-toggle-btn {
+    position: absolute;
+    bottom: 20px;
+    right: -12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--secondary);
+    border: 2px solid #fff;
+    color: #fff;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 1;
+}
+
+.sidebar-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+.sidebar.collapsed .sidebar-toggle-btn {
+    right: -12px;
+    transform: rotate(180deg);
+}
+
+/* ============================================================
+   RESPONSIVE SIDEBAR
+   ============================================================ */
+
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: var(--sidebar-width);
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    
+    .sidebar.collapsed {
+        width: var(--sidebar-width);
+    }
+    
+    .sidebar.collapsed .brand-text {
+        display: block;
+    }
+    
+    .sidebar.collapsed .nav-text {
+        display: block;
+    }
+    
+    .sidebar.collapsed .nav-badge {
+        display: block;
+    }
+    
+    .sidebar.collapsed .status-text {
+        display: block;
+    }
+    
+    .sidebar.collapsed .sidebar-version {
+        display: block;
+    }
+    
+    .sidebar-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: var(--z-modal-backdrop);
+        display: none;
+    }
+    
+    .sidebar-backdrop.show {
+        display: block;
+    }
+}

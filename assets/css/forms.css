@@ -1,0 +1,321 @@
+/**
+ * AI Banking GRC Platform - Form Styles
+ * 
+ * This file contains styles for form components
+ */
+
+/* ============================================================
+   FORM GROUP
+   ============================================================ */
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group .form-label {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-group .form-label.required::after {
+    content: ' *';
+    color: var(--danger);
+}
+
+.form-group .form-text {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+/* ============================================================
+   FORM CONTROL
+   ============================================================ */
+
+.form-control {
+    font-family: var(--font-family);
+    border-radius: var(--input-radius);
+    border: 1px solid var(--input-border);
+    padding: var(--input-padding);
+    font-size: 14px;
+    transition: var(--transition);
+    width: 100%;
+    background: var(--bg-white);
+    color: var(--text-dark);
+}
+
+.form-control:focus {
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+}
+
+.form-control:disabled {
+    background: var(--bg-gray);
+    cursor: not-allowed;
+}
+
+.form-control.readonly {
+    background: var(--bg-gray);
+}
+
+/* ============================================================
+   FORM CONTROL SIZES
+   ============================================================ */
+
+.form-control-sm {
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+.form-control-lg {
+    padding: 14px 18px;
+    font-size: 16px;
+}
+
+/* ============================================================
+   FORM CONTROL STATES
+   ============================================================ */
+
+.form-control.is-valid {
+    border-color: var(--success);
+}
+
+.form-control.is-valid:focus {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.form-control.is-invalid {
+    border-color: var(--danger);
+}
+
+.form-control.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* ============================================================
+   FORM SELECT
+   ============================================================ */
+
+.form-select {
+    font-family: var(--font-family);
+    border-radius: var(--input-radius);
+    border: 1px solid var(--input-border);
+    padding: var(--input-padding);
+    font-size: 14px;
+    transition: var(--transition);
+    width: 100%;
+    background: var(--bg-white);
+    color: var(--text-dark);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.form-select:focus {
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    outline: none;
+}
+
+.form-select:disabled {
+    background: var(--bg-gray);
+    cursor: not-allowed;
+}
+
+/* ============================================================
+   FORM CHECK
+   ============================================================ */
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--secondary);
+}
+
+.form-check-input:checked {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+.form-check-label {
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.form-check-inline {
+    display: inline-flex;
+    margin-right: 16px;
+}
+
+/* ============================================================
+   FORM RADIO
+   ============================================================ */
+
+.form-radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.form-radio-input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--secondary);
+}
+
+.form-radio-label {
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+/* ============================================================
+   FORM SWITCH
+   ============================================================ */
+
+.form-switch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-switch-input {
+    width: 40px;
+    height: 22px;
+    margin: 0;
+    cursor: pointer;
+    appearance: none;
+    background: var(--border);
+    border-radius: 11px;
+    transition: var(--transition);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.form-switch-input::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.form-switch-input:checked {
+    background: var(--secondary);
+}
+
+.form-switch-input:checked::before {
+    transform: translateX(18px);
+}
+
+.form-switch-label {
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+/* ============================================================
+   FORM FEEDBACK
+   ============================================================ */
+
+.valid-feedback {
+    color: var(--success);
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.invalid-feedback {
+    color: var(--danger);
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+/* ============================================================
+   FORM GROUP WITH ICON
+   ============================================================ */
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-group .input-group-text {
+    padding: 10px 14px;
+    background: var(--bg-gray);
+    border: 1px solid var(--input-border);
+    border-radius: var(--input-radius) 0 0 var(--input-radius);
+    color: var(--text-light);
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.input-group .form-control {
+    border-radius: 0 var(--input-radius) var(--input-radius) 0;
+    border-left: none;
+}
+
+.input-group .form-control:not(:first-child) {
+    border-radius: 0 var(--input-radius) var(--input-radius) 0;
+    border-left: none;
+}
+
+.input-group .form-control:not(:last-child) {
+    border-radius: var(--input-radius) 0 0 var(--input-radius);
+    border-right: none;
+}
+
+/* ============================================================
+   FORM ROW
+   ============================================================ */
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   FORM ACTIONS
+   ============================================================ */
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+}

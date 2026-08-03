@@ -1,0 +1,127 @@
+# ============================================================
+# AI Banking GRC Platform - Robots.txt
+# ============================================================
+# This file instructs search engines which areas to crawl
+# and which to avoid for security and privacy reasons.
+# ============================================================
+
+User-agent: *
+Allow: /
+
+# ============================================================
+# DISALLOW SENSITIVE AREAS
+# ============================================================
+
+# Admin and authentication areas
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /login
+Disallow: /register
+Disallow: /logout
+Disallow: /password/
+Disallow: /verify/
+
+# Application directories
+Disallow: /app/
+Disallow: /config/
+Disallow: /database/
+Disallow: /modules/
+Disallow: /storage/
+Disallow: /tests/
+Disallow: /vendor/
+
+# Internal API
+Disallow: /api/
+
+# System files
+Disallow: /cgi-bin/
+Disallow: /tmp/
+Disallow: /logs/
+Disallow: /backup/
+
+# Hidden files and directories
+Disallow: /.env
+Disallow: /.git/
+Disallow: /.htaccess
+Disallow: /.htpasswd
+
+# File extensions not to crawl
+Disallow: /*.sql$
+Disallow: /*.log$
+Disallow: /*.ini$
+Disallow: /*.yaml$
+Disallow: /*.yml$
+Disallow: /*.json$
+Disallow: /*.xml$
+
+# ============================================================
+# CRAWL DELAY
+# ============================================================
+
+# Respect server load
+Crawl-delay: 5
+
+# ============================================================
+# SPECIFIC BOTS
+# ============================================================
+
+# Googlebot
+User-agent: Googlebot
+Disallow: /login
+Disallow: /register
+Disallow: /password/
+Disallow: /api/
+Disallow: /admin/
+Crawl-delay: 2
+
+# Bingbot
+User-agent: bingbot
+Disallow: /login
+Disallow: /register
+Disallow: /api/
+Crawl-delay: 2
+
+# Yandex
+User-agent: Yandex
+Disallow: /login
+Disallow: /register
+Disallow: /api/
+Crawl-delay: 2
+
+# ============================================================
+# SITEMAP
+# ============================================================
+
+# Uncomment when sitemap is generated
+# Sitemap: https://grc-platform.com/sitemap.xml
+
+# ============================================================
+# ALLOW PUBLIC PAGES
+# ============================================================
+
+# Allow crawling of public pages
+Allow: /dashboard
+Allow: /compliance
+Allow: /risk
+Allow: /audit
+Allow: /policies
+Allow: /reports
+Allow: /notifications
+Allow: /settings
+Allow: /users
+Allow: /profile
+Allow: /assets/
+Allow: /uploads/
+Allow: /storage/
+Allow: /docs/
+Allow: /public/
+Allow: /favicon.ico
+Allow: /manifest.json
+Allow: /robots.txt
+
+# ============================================================
+# HOST
+# ============================================================
+
+# Uncomment and set your domain
+# Host: https://grc-platform.com

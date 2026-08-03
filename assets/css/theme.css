@@ -1,0 +1,255 @@
+/**
+ * AI Banking GRC Platform - Theme Configuration
+ * 
+ * This file contains the core theme variables and configurations
+ */
+
+/* ============================================================
+   COLOR PALETTE
+   ============================================================ */
+
+:root {
+    /* Primary Colors */
+    --primary: #0B3D91;
+    --primary-rgb: 11, 61, 145;
+    --primary-light: #1a5bbf;
+    --primary-dark: #082b6e;
+    
+    /* Secondary Colors */
+    --secondary: #2563EB;
+    --secondary-rgb: 37, 99, 235;
+    --secondary-light: #4b82f7;
+    --secondary-dark: #1d4ed8;
+    
+    /* Accent Colors */
+    --accent: #00B894;
+    --accent-rgb: 0, 184, 148;
+    --accent-light: #00d2a0;
+    --accent-dark: #00997a;
+    
+    /* Background Colors */
+    --bg-light: #F4F7FC;
+    --bg-white: #FFFFFF;
+    --bg-dark: #0F172A;
+    --bg-gray: #F8FAFC;
+    
+    /* Text Colors */
+    --text-dark: #1E293B;
+    --text-light: #64748B;
+    --text-muted: #94A3B8;
+    --text-white: #FFFFFF;
+    
+    /* Border Colors */
+    --border: #E2E8F0;
+    --border-light: #F1F5F9;
+    --border-dark: #CBD5E1;
+    
+    /* Status Colors */
+    --success: #22C55E;
+    --success-rgb: 34, 197, 94;
+    --warning: #F59E0B;
+    --warning-rgb: 245, 158, 11;
+    --danger: #EF4444;
+    --danger-rgb: 239, 68, 68;
+    --info: #3B82F6;
+    --info-rgb: 59, 130, 246;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #0B3D91 0%, #2563EB 100%);
+    --gradient-accent: linear-gradient(135deg, #00B894 0%, #00d2a0 100%);
+    --gradient-danger: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    --gradient-success: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+:root {
+    --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-size-base: 14px;
+    --font-size-sm: 12px;
+    --font-size-lg: 16px;
+    --font-size-xl: 20px;
+    --font-size-2xl: 24px;
+    --font-size-3xl: 30px;
+    --font-size-4xl: 36px;
+    
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+}
+
+/* ============================================================
+   SPACING
+   ============================================================ */
+
+:root {
+    --spacing-1: 4px;
+    --spacing-2: 8px;
+    --spacing-3: 12px;
+    --spacing-4: 16px;
+    --spacing-5: 20px;
+    --spacing-6: 24px;
+    --spacing-8: 32px;
+    --spacing-10: 40px;
+    --spacing-12: 48px;
+    --spacing-16: 64px;
+    --spacing-20: 80px;
+}
+
+/* ============================================================
+   SHADOWS
+   ============================================================ */
+
+:root {
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.16);
+    --shadow-2xl: 0 24px 48px rgba(0, 0, 0, 0.20);
+    --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================================
+   BORDER RADIUS
+   ============================================================ */
+
+:root {
+    --radius-none: 0;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 28px;
+    --radius-full: 9999px;
+}
+
+/* ============================================================
+   TRANSITIONS
+   ============================================================ */
+
+:root {
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --transition-bounce: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   Z-INDEX HIERARCHY
+   ============================================================ */
+
+:root {
+    --z-negative: -1;
+    --z-0: 0;
+    --z-10: 10;
+    --z-20: 20;
+    --z-30: 30;
+    --z-40: 40;
+    --z-50: 50;
+    --z-auto: auto;
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    --z-toast: 1080;
+}
+
+/* ============================================================
+   SIDEBAR DIMENSIONS
+   ============================================================ */
+
+:root {
+    --sidebar-width: 260px;
+    --sidebar-collapsed: 72px;
+    --sidebar-bg: #0F172A;
+    --sidebar-color: #FFFFFF;
+    --sidebar-hover: rgba(255, 255, 255, 0.08);
+    --sidebar-active: rgba(37, 99, 235, 0.15);
+}
+
+/* ============================================================
+   TOPBAR DIMENSIONS
+   ============================================================ */
+
+:root {
+    --topbar-height: 70px;
+    --topbar-bg: #0B3D91;
+    --topbar-color: #FFFFFF;
+}
+
+/* ============================================================
+   FOOTER DIMENSIONS
+   ============================================================ */
+
+:root {
+    --footer-height: 60px;
+    --footer-bg: #FFFFFF;
+    --footer-color: #64748B;
+}
+
+/* ============================================================
+   CARD STYLES
+   ============================================================ */
+
+:root {
+    --card-bg: #FFFFFF;
+    --card-border: #E2E8F0;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --card-radius: 12px;
+    --card-padding: 20px;
+}
+
+/* ============================================================
+   BUTTON STYLES
+   ============================================================ */
+
+:root {
+    --btn-radius: 8px;
+    --btn-padding: 8px 20px;
+    --btn-font-weight: 500;
+    --btn-transition: all 0.3s ease;
+}
+
+/* ============================================================
+   INPUT STYLES
+   ============================================================ */
+
+:root {
+    --input-radius: 8px;
+    --input-border: #E2E8F0;
+    --input-focus: #2563EB;
+    --input-padding: 10px 14px;
+}
+
+/* ============================================================
+   TABLE STYLES
+   ============================================================ */
+
+:root {
+    --table-header-bg: #F8FAFC;
+    --table-header-color: #64748B;
+    --table-border: #F1F5F9;
+    --table-hover: #F8FAFC;
+    --table-radius: 12px;
+}
+
+/* ============================================================
+   BREAKPOINTS
+   ============================================================ */
+
+:root {
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-xxl: 1400px;
+}

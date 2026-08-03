@@ -1,0 +1,131 @@
+/**
+ * AI Banking GRC Platform - Notifications Module Styles
+ * 
+ * This file contains styles for the notifications module
+ */
+
+/* ============================================================
+   NOTIFICATIONS CONTAINER
+   ============================================================ */
+
+.notifications-container {
+    padding: 0;
+    animation: fadeIn 0.5s ease;
+}
+
+/* ============================================================
+   NOTIFICATION ITEMS
+   ============================================================ */
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-light);
+    transition: var(--transition);
+    position: relative;
+}
+
+.notification-item:hover {
+    background: var(--bg-gray);
+}
+
+.notification-item.unread {
+    background: #F0F7FF;
+}
+
+.notification-item.unread:hover {
+    background: #E8F0FE;
+}
+
+.notification-check {
+    margin-right: 12px;
+    padding-top: 4px;
+}
+
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;
+    flex-shrink: 0;
+    font-size: 16px;
+}
+
+.notification-icon.compliance { background: #DBEAFE; color: var(--info); }
+.notification-icon.risk { background: #FEF3C7; color: var(--warning); }
+.notification-icon.audit { background: #D1FAE5; color: var(--success); }
+.notification-icon.policy { background: #FCE7F3; color: #EC4899; }
+.notification-icon.system { background: #F1F5F9; color: #64748B; }
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.notification-message {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.notification-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.notification-meta i {
+    width: 14px;
+}
+
+.notification-action {
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.notification-action:hover {
+    text-decoration: underline;
+}
+
+.notification-unread-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--secondary);
+    margin-left: 12px;
+    flex-shrink: 0;
+    margin-top: 8px;
+}
+
+/* ============================================================
+   RESPONSIVE NOTIFICATIONS
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .notification-item {
+        flex-wrap: wrap;
+    }
+    
+    .notification-check {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    
+    .notification-meta {
+        flex-direction: column;
+        gap: 4px;
+    }
+}

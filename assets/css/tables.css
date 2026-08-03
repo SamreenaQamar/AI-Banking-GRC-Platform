@@ -1,0 +1,304 @@
+/**
+ * AI Banking GRC Platform - Table Styles
+ * 
+ * This file contains styles for table components
+ */
+
+/* ============================================================
+   ENTERPRISE TABLE
+   ============================================================ */
+
+.enterprise-table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.enterprise-table thead {
+    background: var(--table-header-bg);
+}
+
+.enterprise-table thead th {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--table-header-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--table-border);
+    white-space: nowrap;
+}
+
+.enterprise-table tbody td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--table-border);
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.enterprise-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.enterprise-table tbody tr:hover {
+    background: var(--table-hover);
+}
+
+/* ============================================================
+   TABLE SIZES
+   ============================================================ */
+
+.table-sm thead th {
+    padding: 8px 12px;
+    font-size: 11px;
+}
+
+.table-sm tbody td {
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.table-lg thead th {
+    padding: 16px 20px;
+}
+
+.table-lg tbody td {
+    padding: 16px 20px;
+}
+
+/* ============================================================
+   TABLE VARIANTS
+   ============================================================ */
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background: var(--bg-gray);
+}
+
+.table-hover tbody tr:hover {
+    background: var(--table-hover);
+}
+
+.table-borderless td,
+.table-borderless th {
+    border: none;
+}
+
+.table-bordered {
+    border: 1px solid var(--border);
+}
+
+.table-bordered td,
+.table-bordered th {
+    border: 1px solid var(--border);
+}
+
+/* ============================================================
+   TABLE RESPONSIVE
+   ============================================================ */
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================================
+   TABLE HEADERS WITH SORT
+   ============================================================ */
+
+.sortable-header {
+    cursor: pointer;
+    user-select: none;
+    transition: var(--transition);
+}
+
+.sortable-header:hover {
+    color: var(--text-dark);
+}
+
+.sortable-header .sort-icon {
+    margin-left: 4px;
+    font-size: 12px;
+    opacity: 0.5;
+}
+
+.sortable-header.asc .sort-icon {
+    opacity: 1;
+}
+
+.sortable-header.desc .sort-icon {
+    opacity: 1;
+    transform: rotate(180deg);
+}
+
+/* ============================================================
+   TABLE ROW STATUS
+   ============================================================ */
+
+.row-success {
+    background: rgba(34, 197, 94, 0.05);
+}
+
+.row-success:hover {
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.row-danger {
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.row-danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.row-warning {
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.row-warning:hover {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.row-info {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.row-info:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* ============================================================
+   TABLE CELLS
+   ============================================================ */
+
+.table-cell-icon {
+    font-size: 16px;
+    width: 28px;
+    text-align: center;
+}
+
+.table-cell-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.table-cell-status {
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.table-cell-status.active {
+    background: #D1FAE5;
+    color: #10B981;
+}
+
+.table-cell-status.inactive {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.table-cell-status.pending {
+    background: #FEF3C7;
+    color: #F59E0B;
+}
+
+/* ============================================================
+   TABLE PAGINATION
+   ============================================================ */
+
+.table-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.table-pagination .pagination-info {
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+.table-pagination .pagination-controls {
+    display: flex;
+    gap: 4px;
+}
+
+/* ============================================================
+   TABLE SEARCH
+   ============================================================ */
+
+.table-search {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 16px;
+    flex-wrap: wrap;
+}
+
+.table-search .search-input {
+    max-width: 300px;
+}
+
+.table-search .search-input .form-control {
+    border-radius: var(--radius-md);
+}
+
+/* ============================================================
+   RESPONSIVE TABLES
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .table-responsive-stack {
+        display: block;
+    }
+    
+    .table-responsive-stack thead {
+        display: none;
+    }
+    
+    .table-responsive-stack tbody,
+    .table-responsive-stack tr,
+    .table-responsive-stack td {
+        display: block;
+        width: 100%;
+    }
+    
+    .table-responsive-stack tr {
+        margin-bottom: 16px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 8px;
+    }
+    
+    .table-responsive-stack td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border: none;
+        border-bottom: 1px solid var(--border-light);
+    }
+    
+    .table-responsive-stack td:last-child {
+        border-bottom: none;
+    }
+    
+    .table-responsive-stack td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-light);
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+}

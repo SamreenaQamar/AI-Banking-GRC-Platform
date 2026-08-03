@@ -1,0 +1,110 @@
+/**
+ * AI Banking GRC Platform - Reports Module Styles
+ * 
+ * This file contains styles for the reports module
+ */
+
+/* ============================================================
+   REPORTS CONTAINER
+   ============================================================ */
+
+.reports-container {
+    padding: 0;
+    animation: fadeIn 0.5s ease;
+}
+
+/* ============================================================
+   REPORT TYPE CARDS
+   ============================================================ */
+
+.report-type-card {
+    background: var(--bg-white);
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    transition: var(--transition);
+    text-decoration: none;
+    display: block;
+    height: 100%;
+    border: 1px solid var(--border-light);
+}
+
+.report-type-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+    text-decoration: none;
+}
+
+.report-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 24px;
+}
+
+.report-type-card h6 {
+    color: var(--text-dark);
+    margin: 0 0 4px;
+}
+
+.report-type-card p {
+    color: var(--text-light);
+    margin: 0 0 12px;
+    font-size: 13px;
+}
+
+/* ============================================================
+   REPORT CARD
+   ============================================================ */
+
+.report-card {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 1px solid var(--border-light);
+}
+
+.report-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.report-name {
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.report-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text-light);
+    flex-wrap: wrap;
+}
+
+.report-format {
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 10px;
+    background: var(--bg-gray);
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+/* ============================================================
+   RESPONSIVE REPORTS
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .report-meta {
+        flex-direction: column;
+        gap: 4px;
+    }
+}

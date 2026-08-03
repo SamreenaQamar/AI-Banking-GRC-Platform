@@ -1,0 +1,727 @@
+/**
+ * AI Banking GRC Platform - CSS Variables & Theme Configuration
+ * 
+ * This file contains all CSS custom properties (variables) used throughout the application.
+ * It defines colors, typography, spacing, shadows, and other design tokens.
+ * 
+ * @package    AI-Banking-GRC-Platform
+ * @version    1.0.0
+ * @author     GRC Platform Team
+ * @copyright  2026 AI Banking GRC Platform
+ * @license    Proprietary
+ */
+
+/* ============================================================
+   ROOT VARIABLES
+   ============================================================ */
+
+:root {
+    /* ============================================================
+       COLOR PALETTE
+       ============================================================ */
+
+    /* Primary Colors */
+    --primary: #0B3D91;
+    --primary-rgb: 11, 61, 145;
+    --primary-light: #1a5bbf;
+    --primary-dark: #082b6e;
+    --primary-hover: #2563EB;
+    --primary-active: #1d4ed8;
+    
+    /* Secondary Colors */
+    --secondary: #2563EB;
+    --secondary-rgb: 37, 99, 235;
+    --secondary-light: #4b82f7;
+    --secondary-dark: #1d4ed8;
+    --secondary-hover: #1d4ed8;
+    --secondary-active: #1e40af;
+    
+    /* Accent Colors */
+    --accent: #00B894;
+    --accent-rgb: 0, 184, 148;
+    --accent-light: #00d2a0;
+    --accent-dark: #00997a;
+    --accent-hover: #00a67e;
+    --accent-active: #008a68;
+    
+    /* Background Colors */
+    --bg-light: #F4F7FC;
+    --bg-white: #FFFFFF;
+    --bg-dark: #0F172A;
+    --bg-gray: #F8FAFC;
+    --bg-hover: #F1F5F9;
+    --bg-active: #E2E8F0;
+    --bg-overlay: rgba(0, 0, 0, 0.5);
+    
+    /* Text Colors */
+    --text-dark: #1E293B;
+    --text-light: #64748B;
+    --text-muted: #94A3B8;
+    --text-white: #FFFFFF;
+    --text-hover: #0F172A;
+    --text-disabled: #CBD5E1;
+    
+    /* Border Colors */
+    --border: #E2E8F0;
+    --border-light: #F1F5F9;
+    --border-dark: #CBD5E1;
+    --border-hover: #94A3B8;
+    --border-active: #2563EB;
+    
+    /* Status Colors */
+    --success: #22C55E;
+    --success-rgb: 34, 197, 94;
+    --success-light: #86EFAC;
+    --success-dark: #16A34A;
+    --success-hover: #16A34A;
+    --success-active: #15803D;
+    
+    --warning: #F59E0B;
+    --warning-rgb: 245, 158, 11;
+    --warning-light: #FCD34D;
+    --warning-dark: #D97706;
+    --warning-hover: #D97706;
+    --warning-active: #B45309;
+    
+    --danger: #EF4444;
+    --danger-rgb: 239, 68, 68;
+    --danger-light: #FCA5A5;
+    --danger-dark: #DC2626;
+    --danger-hover: #DC2626;
+    --danger-active: #B91C1C;
+    
+    --info: #3B82F6;
+    --info-rgb: 59, 130, 246;
+    --info-light: #93C5FD;
+    --info-dark: #2563EB;
+    --info-hover: #2563EB;
+    --info-active: #1D4ED8;
+    
+    /* ============================================================
+       GRADIENTS
+       ============================================================ */
+    
+    --gradient-primary: linear-gradient(135deg, #0B3D91 0%, #2563EB 100%);
+    --gradient-accent: linear-gradient(135deg, #00B894 0%, #00d2a0 100%);
+    --gradient-danger: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    --gradient-success: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+    --gradient-warning: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    --gradient-info: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    --gradient-dark: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    
+    /* ============================================================
+       TYPOGRAPHY
+       ============================================================ */
+    
+    /* Font Families */
+    --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-family-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-family-monospace: 'Courier New', monospace;
+    
+    /* Font Sizes */
+    --font-size-xs: 11px;
+    --font-size-sm: 12px;
+    --font-size-base: 14px;
+    --font-size-md: 15px;
+    --font-size-lg: 16px;
+    --font-size-xl: 18px;
+    --font-size-2xl: 20px;
+    --font-size-3xl: 24px;
+    --font-size-4xl: 28px;
+    --font-size-5xl: 32px;
+    --font-size-6xl: 36px;
+    --font-size-7xl: 42px;
+    --font-size-8xl: 48px;
+    
+    /* Font Weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    
+    /* Line Heights */
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+    --line-height-loose: 2;
+    
+    /* Letter Spacing */
+    --letter-spacing-tight: -0.025em;
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.025em;
+    --letter-spacing-wider: 0.05em;
+    --letter-spacing-widest: 0.1em;
+    
+    /* ============================================================
+       SPACING
+       ============================================================ */
+    
+    --spacing-0: 0;
+    --spacing-1: 4px;
+    --spacing-2: 8px;
+    --spacing-3: 12px;
+    --spacing-4: 16px;
+    --spacing-5: 20px;
+    --spacing-6: 24px;
+    --spacing-7: 28px;
+    --spacing-8: 32px;
+    --spacing-9: 36px;
+    --spacing-10: 40px;
+    --spacing-12: 48px;
+    --spacing-14: 56px;
+    --spacing-16: 64px;
+    --spacing-20: 80px;
+    --spacing-24: 96px;
+    --spacing-28: 112px;
+    --spacing-32: 128px;
+    
+    /* ============================================================
+       SHADOWS
+       ============================================================ */
+    
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.16);
+    --shadow-2xl: 0 24px 48px rgba(0, 0, 0, 0.20);
+    --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-outline: 0 0 0 3px rgba(37, 99, 235, 0.3);
+    --shadow-none: none;
+    
+    /* ============================================================
+       BORDER RADIUS
+       ============================================================ */
+    
+    --radius-none: 0;
+    --radius-xs: 2px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 28px;
+    --radius-3xl: 36px;
+    --radius-full: 9999px;
+    
+    /* ============================================================
+       TRANSITIONS
+       ============================================================ */
+    
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --transition-bounce: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    
+    /* ============================================================
+       Z-INDEX HIERARCHY
+       ============================================================ */
+    
+    --z-negative: -1;
+    --z-0: 0;
+    --z-10: 10;
+    --z-20: 20;
+    --z-30: 30;
+    --z-40: 40;
+    --z-50: 50;
+    --z-auto: auto;
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    --z-toast: 1080;
+    
+    /* ============================================================
+       LAYOUT DIMENSIONS
+       ============================================================ */
+    
+    /* Sidebar */
+    --sidebar-width: 260px;
+    --sidebar-collapsed: 72px;
+    --sidebar-bg: #0F172A;
+    --sidebar-color: #FFFFFF;
+    --sidebar-hover: rgba(255, 255, 255, 0.08);
+    --sidebar-active: rgba(37, 99, 235, 0.15);
+    --sidebar-border: rgba(255, 255, 255, 0.05);
+    --sidebar-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    
+    /* Topbar */
+    --topbar-height: 70px;
+    --topbar-bg: #0B3D91;
+    --topbar-color: #FFFFFF;
+    --topbar-shadow: 0 2px 8px rgba(11, 61, 145, 0.3);
+    
+    /* Footer */
+    --footer-height: 60px;
+    --footer-bg: #FFFFFF;
+    --footer-color: #64748B;
+    --footer-border: #E2E8F0;
+    --footer-shadow: 0 -1px 3px rgba(0, 0, 0, 0.06);
+    
+    /* Cards */
+    --card-bg: #FFFFFF;
+    --card-border: #E2E8F0;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --card-radius: 12px;
+    --card-padding: 20px;
+    --card-header-bg: transparent;
+    --card-footer-bg: transparent;
+    
+    /* Buttons */
+    --btn-radius: 8px;
+    --btn-padding: 8px 20px;
+    --btn-font-weight: 500;
+    --btn-transition: all 0.3s ease;
+    --btn-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --btn-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    
+    /* Inputs */
+    --input-radius: 8px;
+    --input-border: #E2E8F0;
+    --input-focus: #2563EB;
+    --input-padding: 10px 14px;
+    --input-bg: #FFFFFF;
+    --input-color: #1E293B;
+    --input-placeholder: #94A3B8;
+    --input-disabled-bg: #F1F5F9;
+    --input-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    
+    /* Tables */
+    --table-header-bg: #F8FAFC;
+    --table-header-color: #64748B;
+    --table-border: #F1F5F9;
+    --table-hover: #F8FAFC;
+    --table-radius: 12px;
+    --table-stripe: #F8FAFC;
+    
+    /* ============================================================
+       BREAKPOINTS
+       ============================================================ */
+    
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-xxl: 1400px;
+    
+    /* ============================================================
+       CONTAINER MAX WIDTHS
+       ============================================================ */
+    
+    --container-sm: 540px;
+    --container-md: 720px;
+    --container-lg: 960px;
+    --container-xl: 1140px;
+    --container-xxl: 1320px;
+    
+    /* ============================================================
+       GRID
+       ============================================================ */
+    
+    --grid-gutter: 20px;
+    --grid-columns: 12;
+    
+    /* ============================================================
+       OPACITY
+       ============================================================ */
+    
+    --opacity-0: 0;
+    --opacity-25: 0.25;
+    --opacity-50: 0.5;
+    --opacity-75: 0.75;
+    --opacity-100: 1;
+    
+    /* ============================================================
+       BORDER WIDTHS
+       ============================================================ */
+    
+    --border-width-0: 0;
+    --border-width-1: 1px;
+    --border-width-2: 2px;
+    --border-width-4: 4px;
+    --border-width-8: 8px;
+    
+    /* ============================================================
+       SCROLLBAR STYLING
+       ============================================================ */
+    
+    --scrollbar-width: 8px;
+    --scrollbar-track: #F1F5F9;
+    --scrollbar-thumb: #CBD5E1;
+    --scrollbar-thumb-hover: #94A3B8;
+    --scrollbar-radius: 4px;
+}
+
+/* ============================================================
+   DARK MODE VARIABLES
+   ============================================================ */
+
+body.dark-mode {
+    /* Background Colors */
+    --bg-light: #0F172A;
+    --bg-white: #1E293B;
+    --bg-gray: #1E293B;
+    --bg-hover: #2D3A4F;
+    --bg-active: #334155;
+    --bg-overlay: rgba(0, 0, 0, 0.7);
+    
+    /* Text Colors */
+    --text-dark: #F1F5F9;
+    --text-light: #94A3B8;
+    --text-muted: #64748B;
+    --text-white: #FFFFFF;
+    --text-hover: #FFFFFF;
+    --text-disabled: #475569;
+    
+    /* Border Colors */
+    --border: #334155;
+    --border-light: #1E293B;
+    --border-dark: #475569;
+    --border-hover: #64748B;
+    --border-active: #2563EB;
+    
+    /* Card */
+    --card-bg: #1E293B;
+    --card-border: #334155;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    
+    /* Table */
+    --table-header-bg: #1E293B;
+    --table-border: #334155;
+    --table-hover: #2D3A4F;
+    --table-stripe: #1E293B;
+    
+    /* Input */
+    --input-bg: #1E293B;
+    --input-border: #334155;
+    --input-color: #F1F5F9;
+    --input-placeholder: #64748B;
+    --input-disabled-bg: #2D3A4F;
+    
+    /* Footer */
+    --footer-bg: #1E293B;
+    --footer-border: #334155;
+    --footer-color: #94A3B8;
+    
+    /* Shadow */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.6);
+    
+    /* Scrollbar */
+    --scrollbar-track: #1E293B;
+    --scrollbar-thumb: #334155;
+    --scrollbar-thumb-hover: #475569;
+}
+
+/* ============================================================
+   THEME TRANSITIONS
+   ============================================================ */
+
+.theme-transition {
+    transition: 
+        background-color 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.theme-transition * {
+    transition: 
+        background-color 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================================
+   HIGH CONTRAST
+   ============================================================ */
+
+@media (prefers-contrast: high) {
+    :root {
+        --border: #000;
+        --border-light: #333;
+        --text-light: #000;
+        --text-muted: #333;
+    }
+    
+    body.dark-mode {
+        --border: #fff;
+        --border-light: #ccc;
+        --text-light: #fff;
+        --text-muted: #ccc;
+    }
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+
+@media print {
+    :root {
+        --shadow-sm: none;
+        --shadow-md: none;
+        --shadow-lg: none;
+        --shadow-xl: none;
+        --shadow-2xl: none;
+    }
+}
+
+/* ============================================================
+   UTILITY VARIABLES FOR COMPONENTS
+   ============================================================ */
+
+/* ============================================================
+   DASHBOARD SPECIFIC
+   ============================================================ */
+
+.dashboard-variables {
+    --dashboard-widget-bg: var(--card-bg);
+    --dashboard-widget-shadow: var(--shadow-sm);
+    --dashboard-widget-radius: var(--radius-lg);
+    --dashboard-widget-padding: 20px;
+    --dashboard-widget-hover-shadow: var(--shadow-md);
+    --dashboard-widget-hover-transform: translateY(-2px);
+}
+
+/* ============================================================
+   CHART VARIABLES
+   ============================================================ */
+
+.chart-variables {
+    --chart-grid-color: var(--border-light);
+    --chart-text-color: var(--text-light);
+    --chart-legend-color: var(--text-light);
+    --chart-tooltip-bg: var(--bg-white);
+    --chart-tooltip-border: var(--border);
+    --chart-tooltip-shadow: var(--shadow-md);
+}
+
+/* ============================================================
+   FORM VARIABLES
+   ============================================================ */
+
+.form-variables {
+    --form-label-color: var(--text-dark);
+    --form-label-weight: 500;
+    --form-help-color: var(--text-muted);
+    --form-error-color: var(--danger);
+    --form-success-color: var(--success);
+}
+
+/* ============================================================
+   NAVIGATION VARIABLES
+   ============================================================ */
+
+.nav-variables {
+    --nav-link-color: var(--text-light);
+    --nav-link-hover-color: var(--text-dark);
+    --nav-link-active-color: var(--secondary);
+    --nav-link-disabled-color: var(--text-muted);
+    --nav-link-padding: 8px 16px;
+    --nav-link-radius: var(--radius-md);
+}
+
+/* ============================================================
+   BADGE VARIABLES
+   ============================================================ */
+
+.badge-variables {
+    --badge-padding: 4px 10px;
+    --badge-radius: 12px;
+    --badge-font-size: 11px;
+    --badge-font-weight: 600;
+    --badge-primary: var(--secondary);
+    --badge-secondary: var(--text-muted);
+    --badge-success: var(--success);
+    --badge-danger: var(--danger);
+    --badge-warning: var(--warning);
+    --badge-info: var(--info);
+}
+
+/* ============================================================
+   ALERT VARIABLES
+   ============================================================ */
+
+.alert-variables {
+    --alert-padding: 12px 16px;
+    --alert-radius: var(--radius-md);
+    --alert-border-width: 1px;
+    --alert-primary-bg: #DBEAFE;
+    --alert-primary-border: #93C5FD;
+    --alert-primary-color: #1E40AF;
+    --alert-success-bg: #D1FAE5;
+    --alert-success-border: #86EFAC;
+    --alert-success-color: #065F46;
+    --alert-danger-bg: #FEE2E2;
+    --alert-danger-border: #FCA5A5;
+    --alert-danger-color: #991B1B;
+    --alert-warning-bg: #FEF3C7;
+    --alert-warning-border: #FCD34D;
+    --alert-warning-color: #92400E;
+    --alert-info-bg: #DBEAFE;
+    --alert-info-border: #93C5FD;
+    --alert-info-color: #1E40AF;
+}
+
+/* ============================================================
+   LOADER VARIABLES
+   ============================================================ */
+
+.loader-variables {
+    --loader-size: 40px;
+    --loader-border-width: 4px;
+    --loader-color: var(--secondary);
+    --loader-track-color: var(--border-light);
+    --loader-duration: 0.8s;
+}
+
+/* ============================================================
+   DROPDOWN VARIABLES
+   ============================================================ */
+
+.dropdown-variables {
+    --dropdown-bg: var(--bg-white);
+    --dropdown-border: var(--border);
+    --dropdown-shadow: var(--shadow-lg);
+    --dropdown-radius: var(--radius-md);
+    --dropdown-item-padding: 8px 16px;
+    --dropdown-item-hover: var(--bg-hover);
+    --dropdown-item-active: var(--secondary);
+    --dropdown-divider: var(--border-light);
+}
+
+/* ============================================================
+   MODAL VARIABLES
+   ============================================================ */
+
+.modal-variables {
+    --modal-bg: var(--bg-white);
+    --modal-border: var(--border);
+    --modal-shadow: var(--shadow-xl);
+    --modal-radius: var(--radius-lg);
+    --modal-header-bg: transparent;
+    --modal-footer-bg: transparent;
+    --modal-backdrop: var(--bg-overlay);
+    --modal-content-padding: 20px;
+}
+
+/* ============================================================
+   TOOLTIP VARIABLES
+   ============================================================ */
+
+.tooltip-variables {
+    --tooltip-bg: var(--text-dark);
+    --tooltip-color: var(--text-white);
+    --tooltip-radius: var(--radius-sm);
+    --tooltip-padding: 4px 10px;
+    --tooltip-font-size: 12px;
+    --tooltip-max-width: 200px;
+}
+
+/* ============================================================
+   PROGRESS VARIABLES
+   ============================================================ */
+
+.progress-variables {
+    --progress-height: 6px;
+    --progress-radius: 3px;
+    --progress-bg: var(--border-light);
+    --progress-color: var(--secondary);
+    --progress-success: var(--success);
+    --progress-danger: var(--danger);
+    --progress-warning: var(--warning);
+}
+
+/* ============================================================
+   MEDIA QUERY VARIABLES
+   ============================================================ */
+
+/* For use in CSS files if needed */
+:root {
+    --screen-sm: 576px;
+    --screen-md: 768px;
+    --screen-lg: 992px;
+    --screen-xl: 1200px;
+    --screen-xxl: 1400px;
+}
+
+/* ============================================================
+   CUSTOM PROPERTY UTILITIES
+   ============================================================ */
+
+/* Helper class to apply dark mode variables */
+.dark-mode-variables {
+    /* These are automatically applied when body has .dark-mode class */
+}
+
+/* ============================================================
+   SCROLLBAR STYLING (Applied via variables)
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: var(--scrollbar-radius);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: var(--scrollbar-radius);
+    transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* ============================================================
+   SELECTION COLOR
+   ============================================================ */
+
+::selection {
+    background: var(--secondary);
+    color: var(--text-white);
+}
+
+::-moz-selection {
+    background: var(--secondary);
+    color: var(--text-white);
+}
+
+/* ============================================================
+   END OF VARIABLES
+   ============================================================ */

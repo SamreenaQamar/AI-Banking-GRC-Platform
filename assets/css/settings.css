@@ -1,0 +1,158 @@
+/**
+ * AI Banking GRC Platform - Settings Module Styles
+ * 
+ * This file contains styles for the settings module
+ */
+
+/* ============================================================
+   SETTINGS CONTAINER
+   ============================================================ */
+
+.settings-container {
+    padding: 0;
+    animation: fadeIn 0.5s ease;
+}
+
+/* ============================================================
+   SETTINGS CARDS
+   ============================================================ */
+
+.settings-card {
+    background: var(--bg-white);
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    transition: var(--transition);
+    text-decoration: none;
+    display: block;
+    height: 100%;
+    border: 1px solid var(--border-light);
+}
+
+.settings-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+    border-color: var(--secondary);
+    text-decoration: none;
+}
+
+.settings-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 24px;
+}
+
+.settings-card h6 {
+    color: var(--text-dark);
+    margin: 0 0 4px;
+    font-weight: 600;
+}
+
+.settings-card p {
+    margin: 0 0 12px;
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+.settings-status {
+    font-size: 12px;
+    padding: 2px 12px;
+    border-radius: 12px;
+    background: var(--bg-gray);
+    color: var(--text-light);
+}
+
+.settings-status.online {
+    background: #D1FAE5;
+    color: #10B981;
+}
+
+/* ============================================================
+   SETTINGS FORM
+   ============================================================ */
+
+.settings-form .form-group {
+    margin-bottom: 20px;
+}
+
+.settings-form .form-label {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+}
+
+.settings-form .form-control,
+.settings-form .form-select {
+    border-radius: var(--radius-md);
+    border-color: var(--border);
+}
+
+.settings-form .form-control:focus,
+.settings-form .form-select:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ============================================================
+   UPLOAD AREA
+   ============================================================ */
+
+.upload-area {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    background: var(--bg-gray);
+}
+
+.upload-area:hover {
+    border-color: var(--secondary);
+    background: #F0F7FF;
+}
+
+.upload-area.dragover {
+    border-color: var(--secondary);
+    background: #DBEAFE;
+}
+
+.upload-content i {
+    font-size: 48px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.upload-content .browse-link {
+    color: var(--secondary);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.upload-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* ============================================================
+   RESPONSIVE SETTINGS
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .settings-card {
+        padding: 16px;
+    }
+}

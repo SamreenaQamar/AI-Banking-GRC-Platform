@@ -1,0 +1,192 @@
+# ============================================================
+# AI Banking GRC Platform - Git Ignore
+# ============================================================
+# This file specifies intentionally untracked files to ignore
+# ============================================================
+
+# ============================================================
+# PHP & Composer
+# ============================================================
+
+# Composer dependencies
+/vendor/
+composer.phar
+composer.lock
+
+# PHP cache
+.php.cache
+.phpunit.cache
+
+# PHP errors
+*.log
+*.tmp
+
+# ============================================================
+# Environment & Configuration
+# ============================================================
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.testing
+.env.production
+
+# Configuration files
+config/*.local.php
+config/*.local.yml
+
+# ============================================================
+# Storage & Logs
+# ============================================================
+
+# Application storage
+/storage/
+/storage/*
+!/storage/.gitkeep
+!/storage/cache/.gitkeep
+!/storage/logs/.gitkeep
+!/storage/temp/.gitkeep
+
+# Logs
+*.log
+logs/
+error.log
+access.log
+activity.log
+security.log
+audit.log
+
+# Cache
+cache/
+*.cache
+*.serialized
+
+# Temp files
+temp/
+*.tmp
+*.temp
+
+# Uploads
+/uploads/
+/uploads/*
+!/uploads/.gitkeep
+
+# ============================================================
+# IDE & Editor Files
+# ============================================================
+
+# PHPStorm
+.idea/
+*.iml
+.vscode/
+.vscode/
+*.code-workspace
+*.sublime-*
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================================
+# Testing & Coverage
+# ============================================================
+
+# Test coverage
+coverage/
+reports/
+*.coverage
+.phpunit.result.cache
+
+# Test output
+tests/reports/
+tests/coverage/
+
+# ============================================================
+# Build & Distribution
+# ============================================================
+
+# Build output
+/build/
+/dist/
+*.zip
+*.tar.gz
+*.tgz
+
+# ============================================================
+# OS Files
+# ============================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+*.swp
+*.swo
+
+# ============================================================
+# Security
+# ============================================================
+
+# Private keys
+*.key
+*.pem
+*.crt
+*.csr
+*.p12
+
+# Database backups
+*.sql
+*.dump
+
+# ============================================================
+# Frontend Assets
+# ============================================================
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Frontend build
+/public/assets/css/
+/public/assets/js/
+/public/assets/fonts/
+/public/mix-manifest.json
+
+# ============================================================
+# Project Specific
+# ============================================================
+
+# Database migrations backup
+/database/backup/*.sql
+
+# IDE specific
+/.php_cs
+/.php_cs.cache
+
+# ============================================================
+# Exceptions
+# ============================================================
+
+# Allow these files to be tracked
+!/.gitignore
+!/.htaccess
+!/.env.example
+
+# Allow essential storage directories
+!/storage/cache/.gitkeep
+!/storage/logs/.gitkeep
+!/storage/temp/.gitkeep

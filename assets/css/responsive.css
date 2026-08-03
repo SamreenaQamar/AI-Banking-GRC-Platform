@@ -1,0 +1,857 @@
+/**
+ * AI Banking GRC Platform - Responsive Styles
+ * 
+ * This file contains responsive styles for all screen sizes
+ * ensuring the application looks professional on all devices.
+ */
+
+/* ============================================================
+   LARGE DESKTOP (1400px - 1201px)
+   ============================================================ */
+
+@media (max-width: 1400px) {
+    .container-fluid {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+    
+    .page-content {
+        padding: 20px 24px;
+    }
+    
+    .welcome-banner {
+        padding: 20px 24px;
+    }
+}
+
+/* ============================================================
+   DESKTOP (1200px - 993px)
+   ============================================================ */
+
+@media (max-width: 1200px) {
+    .container-fluid {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    .page-content {
+        padding: 16px 20px;
+    }
+    
+    .widget-value {
+        font-size: 24px;
+    }
+    
+    .welcome-banner h2 {
+        font-size: 22px;
+    }
+    
+    .card-body {
+        padding: 16px 18px;
+    }
+    
+    .card-header {
+        padding: 14px 18px;
+    }
+}
+
+/* ============================================================
+   TABLET (992px - 769px)
+   ============================================================ */
+
+@media (max-width: 992px) {
+    /* Sidebar */
+    .sidebar {
+        transform: translateX(-100%);
+        width: var(--sidebar-width);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    
+    .sidebar.collapsed {
+        width: var(--sidebar-width);
+    }
+    
+    .sidebar.collapsed .brand-text {
+        display: block;
+    }
+    
+    .sidebar.collapsed .nav-text {
+        display: block;
+    }
+    
+    .sidebar.collapsed .nav-badge {
+        display: block;
+    }
+    
+    .sidebar.collapsed .status-text {
+        display: block;
+    }
+    
+    .sidebar.collapsed .sidebar-version {
+        display: block;
+    }
+    
+    /* App Content */
+    .app-content {
+        margin-left: 0 !important;
+    }
+    
+    .app-footer {
+        margin-left: 0 !important;
+    }
+    
+    /* Topbar */
+    .topbar-center {
+        max-width: 300px;
+        margin: 0 12px;
+    }
+    
+    .search-shortcut {
+        display: none;
+    }
+    
+    .logo-text {
+        font-size: 14px;
+    }
+    
+    /* Cards */
+    .card-body {
+        padding: 16px;
+    }
+    
+    .card-header {
+        padding: 12px 16px;
+    }
+    
+    .card-stats {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    /* Tables */
+    .table-responsive-stack {
+        display: block;
+    }
+    
+    .table-responsive-stack thead {
+        display: none;
+    }
+    
+    .table-responsive-stack tbody,
+    .table-responsive-stack tr,
+    .table-responsive-stack td {
+        display: block;
+        width: 100%;
+    }
+    
+    .table-responsive-stack tr {
+        margin-bottom: 16px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 8px;
+        background: var(--bg-white);
+    }
+    
+    .table-responsive-stack td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border: none;
+        border-bottom: 1px solid var(--border-light);
+    }
+    
+    .table-responsive-stack td:last-child {
+        border-bottom: none;
+    }
+    
+    .table-responsive-stack td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-light);
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+    
+    /* Footer */
+    .footer-stats {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    /* Charts */
+    .chart-container {
+        height: 220px;
+    }
+    
+    /* Modals */
+    .modal-dialog {
+        margin: 16px;
+    }
+}
+
+/* ============================================================
+   MOBILE (768px - 577px)
+   ============================================================ */
+
+@media (max-width: 768px) {
+    /* Topbar */
+    .topbar {
+        padding: 0 12px;
+        height: 60px;
+    }
+    
+    .topbar-center {
+        display: none;
+    }
+    
+    .profile-info {
+        display: none;
+    }
+    
+    .current-date {
+        display: none;
+    }
+    
+    .topbar-btn:not(.profile-btn):not(.ai-btn) {
+        display: none;
+    }
+    
+    .sidebar-toggle {
+        font-size: 18px;
+        padding: 4px 6px;
+    }
+    
+    /* Page Content */
+    .page-content {
+        padding: 12px 16px;
+    }
+    
+    .page-header {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .page-header-right {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+    
+    .page-title {
+        font-size: 18px;
+    }
+    
+    .breadcrumb {
+        font-size: 12px;
+    }
+    
+    /* Welcome Banner */
+    .welcome-banner {
+        padding: 16px 20px;
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+    
+    .welcome-banner h2 {
+        font-size: 20px;
+    }
+    
+    .welcome-actions {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    /* Widgets */
+    .widget-value {
+        font-size: 22px;
+    }
+    
+    .widget-card {
+        padding: 16px;
+    }
+    
+    .widget-title {
+        font-size: 13px;
+    }
+    
+    /* Cards */
+    .card-stats {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .card-actions {
+        flex-wrap: wrap;
+    }
+    
+    /* Forms */
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+    
+    .code-inputs .form-control {
+        width: 40px;
+        height: 48px;
+        font-size: 20px;
+    }
+    
+    .input-group .form-control {
+        font-size: 16px;
+    }
+    
+    .form-control,
+    .form-select {
+        font-size: 16px;
+    }
+    
+    /* Tables */
+    .table-pagination {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+    }
+    
+    .table-search {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .table-search .search-input {
+        max-width: 100%;
+    }
+    
+    .enterprise-table thead th {
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+    
+    .enterprise-table tbody td {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    /* Modals */
+    .modal-dialog {
+        margin: 10px;
+    }
+    
+    .modal-body {
+        padding: 16px;
+    }
+    
+    .modal-header {
+        padding: 12px 16px;
+    }
+    
+    .modal-footer {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+        margin: 4px 0;
+    }
+    
+    /* Charts */
+    .chart-container {
+        height: 200px;
+    }
+    
+    /* Footer */
+    .app-footer {
+        padding: 12px 16px;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 4px;
+    }
+    
+    .footer-left,
+    .footer-right {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .footer-stats {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+    }
+    
+    /* Auth */
+    .auth-card {
+        padding: 24px 20px;
+    }
+    
+    .auth-brand h2 {
+        font-size: 20px;
+    }
+    
+    .auth-options {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    /* Notifications */
+    .notification-item {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+    }
+    
+    .notification-check {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    
+    .notification-meta {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    /* Risk */
+    .heatmap-grid {
+        min-width: 300px;
+    }
+    
+    .heatmap-row {
+        grid-template-columns: 60px repeat(5, 1fr);
+    }
+    
+    .heatmap-label {
+        font-size: 11px;
+        padding-right: 8px;
+    }
+    
+    .heatmap-cell {
+        min-height: 30px;
+    }
+    
+    .heatmap-cell .cell-count {
+        font-size: 11px;
+    }
+    
+    /* Audit */
+    .audit-meta {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .evidence-preview {
+        height: 120px;
+    }
+    
+    /* Compliance */
+    .circular-meta {
+        flex-direction: column;
+        gap: 4px;
+    }
+}
+
+/* ============================================================
+   SMALL MOBILE (576px and below)
+   ============================================================ */
+
+@media (max-width: 576px) {
+    /* Topbar */
+    .topbar-logo .logo-text {
+        display: none;
+    }
+    
+    .profile-btn {
+        padding: 6px;
+    }
+    
+    .profile-avatar {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .profile-avatar span {
+        font-size: 12px;
+    }
+    
+    .topbar-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
+    }
+    
+    /* Page Content */
+    .page-content {
+        padding: 8px 12px;
+    }
+    
+    /* Cards */
+    .card-body {
+        padding: 12px;
+    }
+    
+    .card-header {
+        padding: 10px 12px;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .card-header .card-actions {
+        width: 100%;
+    }
+    
+    /* Buttons */
+    .btn {
+        font-size: 13px;
+        padding: 6px 14px;
+    }
+    
+    .btn-lg {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+    
+    .btn-block-mobile {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Forms */
+    .input-group .form-control {
+        font-size: 16px;
+    }
+    
+    .form-control,
+    .form-select {
+        font-size: 16px;
+    }
+    
+    /* Modal */
+    .modal-content {
+        border-radius: var(--radius-md);
+    }
+    
+    /* Toast */
+    .toast-notification {
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+        max-width: none;
+        font-size: 13px;
+        padding: 10px 16px;
+    }
+    
+    /* Auth */
+    .auth-card {
+        padding: 20px;
+    }
+    
+    .auth-brand h2 {
+        font-size: 18px;
+    }
+    
+    .code-inputs .form-control {
+        width: 36px;
+        height: 44px;
+        font-size: 18px;
+    }
+    
+    /* Dashboard */
+    .widget-value {
+        font-size: 20px;
+    }
+    
+    .widget-card {
+        padding: 14px;
+    }
+    
+    /* Tables */
+    .enterprise-table tbody td {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    /* Navigation */
+    .nav-text {
+        font-size: 13px;
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+        flex-wrap: wrap;
+    }
+    
+    .quick-actions .btn {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+    
+    /* Last Updated */
+    .last-updated {
+        font-size: 11px;
+    }
+    
+    /* Filters */
+    .filter-section .row .col-md-3,
+    .filter-section .row .col-md-2,
+    .filter-section .row .col-md-4 {
+        margin-bottom: 8px;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+    }
+    
+    .filter-group {
+        min-width: 100%;
+    }
+    
+    /* Search */
+    .search-box {
+        max-width: 100%;
+    }
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+
+@media print {
+    /* Hide navigation */
+    .sidebar,
+    .topbar,
+    .app-footer,
+    .no-print {
+        display: none !important;
+    }
+    
+    /* Main content */
+    .app-content {
+        margin-left: 0 !important;
+        padding: 20px !important;
+    }
+    
+    .page-content {
+        padding: 0 !important;
+    }
+    
+    .page-header {
+        padding: 0 !important;
+        margin-bottom: 16px !important;
+    }
+    
+    /* Cards */
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid;
+        margin-bottom: 16px !important;
+    }
+    
+    .card-header {
+        background: #f8f9fa !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+    
+    /* Tables */
+    .enterprise-table {
+        border: 1px solid #ddd !important;
+    }
+    
+    .enterprise-table thead {
+        background: #f8f9fa !important;
+    }
+    
+    .enterprise-table thead th {
+        color: #000 !important;
+    }
+    
+    .enterprise-table tbody tr {
+        page-break-inside: avoid;
+    }
+    
+    /* Charts */
+    .chart-container {
+        height: 200px !important;
+    }
+    
+    /* Colors */
+    .text-primary { color: #0B3D91 !important; }
+    .text-secondary { color: #2563EB !important; }
+    .text-success { color: #22C55E !important; }
+    .text-danger { color: #EF4444 !important; }
+    .text-warning { color: #F59E0B !important; }
+    
+    /* Links */
+    a {
+        text-decoration: underline !important;
+    }
+    
+    /* Page breaks */
+    .page-break {
+        page-break-before: always;
+    }
+    
+    /* Hide backgrounds */
+    .bg-primary,
+    .bg-secondary,
+    .bg-success,
+    .bg-danger,
+    .bg-warning {
+        background: transparent !important;
+        color: #000 !important;
+    }
+    
+    /* Force colors */
+    .btn-primary,
+    .btn-secondary,
+    .btn-success,
+    .btn-danger {
+        background: transparent !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+    }
+}
+
+/* ============================================================
+   DARK MODE RESPONSIVE
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+    body:not(.dark-mode) {
+        /* This will only apply if user prefers dark mode and dark-mode class is not set */
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================================
+   HIGH CONTRAST
+   ============================================================ */
+
+@media (prefers-contrast: high) {
+    .card,
+    .widget-card,
+    .stat-card {
+        border: 2px solid currentColor !important;
+        box-shadow: none !important;
+    }
+    
+    .btn {
+        border: 2px solid currentColor !important;
+    }
+    
+    .form-control,
+    .form-select {
+        border: 2px solid currentColor !important;
+    }
+    
+    .badge {
+        border: 1px solid currentColor !important;
+    }
+    
+    .text-muted {
+        color: #000 !important;
+        opacity: 0.8 !important;
+    }
+}
+
+/* ============================================================
+   LANDSCAPE MOBILE
+   ============================================================ */
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .sidebar {
+        overflow-y: auto;
+    }
+    
+    .welcome-banner {
+        padding: 12px 16px;
+    }
+    
+    .welcome-banner h2 {
+        font-size: 18px;
+    }
+    
+    .widget-value {
+        font-size: 18px;
+    }
+    
+    .card-body {
+        padding: 12px;
+    }
+    
+    .page-content {
+        padding: 8px 12px;
+    }
+}
+
+/* ============================================================
+   RETINA DISPLAY
+   ============================================================ */
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* High DPI optimizations */
+    .profile-avatar img,
+    .user-avatar img {
+        image-rendering: auto;
+    }
+    
+    .brand-logo {
+        image-rendering: auto;
+    }
+}
+
+/* ============================================================
+   TOUCH DEVICES
+   ============================================================ */
+
+@media (hover: none) {
+    /* Touch-friendly styles */
+    .btn:hover {
+        transform: none !important;
+    }
+    
+    .card:hover {
+        transform: none !important;
+    }
+    
+    .widget-card:hover {
+        transform: none !important;
+    }
+    
+    .nav-link:hover {
+        background: transparent !important;
+    }
+    
+    .dropdown-item:hover {
+        background: transparent !important;
+    }
+}
