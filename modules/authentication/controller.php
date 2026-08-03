@@ -1,25 +1,20 @@
 <?php
 /**
- * AI Banking GRC Platform - Authentication Module Controller
+ * Authentication Module - Controller
  * 
  * @package    AI-Banking-GRC-Platform
- * @subpackage Modules\Authentication
+ * @subpackage modules/authentication
  * @version    1.0.0
  * @author     GRC Platform Team
  * @copyright  2026 AI Banking GRC Platform
  * @license    Proprietary
  * 
- * This controller handles all authentication-related operations:
- * - User login and logout
- * - User registration
- * - Password reset and recovery
- * - Email verification
- * - Session management
+ * This controller handles all authentication actions:
+ * - Login, logout, registration
+ * - Password reset and email verification
  * - Two-factor authentication
- * - Role-based redirection
- * - CSRF protection
- * - Input validation
- * - Secure error handling
+ * - Profile management
+ * - Session management
  */
 
 declare(strict_types=1);
@@ -32,10 +27,11 @@ use App\Helpers\Auth;
 use App\Helpers\CSRF;
 use App\Helpers\Validation;
 use App\Services\EmailService;
-use Modules\Authentication\Service as AuthService;
+use Modules\Authentication\Services\AuthService;
+use Modules\Authentication\Services\TwoFactorService;
 use Exception;
 
-class Controller extends BaseController
+class AuthController extends BaseController
 {
     /**
      * @var AuthService
@@ -43,9 +39,9 @@ class Controller extends BaseController
     private AuthService $authService;
     
     /**
-     * @var User
+     * @var TwoFactorService
      */
-    private User $userModel;
+    private TwoFactorService $twoFactorService;
     
     /**
      * @var EmailService
@@ -53,66 +49,42 @@ class Controller extends BaseController
     private EmailService $emailService;
     
     /**
-     * @var array Module configuration
+     * @var User
      */
-    private array $config;
+    private User $userModel;
     
     /**
-     * Constructor - Initialize authentication module
+     * Constructor
      */
     public function __construct()
     {
         parent::__construct();
         $this->controllerName = 'Auth';
         $this->authService = new AuthService();
-        $this->userModel = new User();
+        $this->twoFactorService = new TwoFactorService();
         $this->emailService = new EmailService();
-        
-        // Load module configuration
-        $this->loadConfig();
+        $this->userModel = new User();
     }
     
     /**
-     * Load module configuration
-     * 
-     * @return void
-     */
-    private function loadConfig(): void
-    {
-        $configPath = __DIR__ . '/config.php';
-        if (file_exists($configPath)) {
-            $this->config = require $configPath;
-            
-            // Define module constants for easy access
-            foreach ($this->config as $key => $value) {
-                if (is_scalar($value)) {
-                    define('AUTH_' . strtoupper($key), $value);
-                }
-            }
-        }
-    }
-    
-    /**
-     * Display login page
+     * Show login page
      * 
      * @return void
      */
     public function login(): void
     {
-        // If already logged in, redirect to dashboard
         if (Auth::check()) {
             $this->redirectToRoute('dashboard');
         }
         
         $this->render('auth/login', [
             'title' => 'Login - ' . APP_NAME,
-            'has_error' => false,
-            'module' => 'authentication'
+            'has_error' => false
         ]);
     }
     
     /**
-     * Authenticate user credentials
+     * Authenticate user
      * 
      * @return void
      */
@@ -120,66 +92,72 @@ class Controller extends BaseController
     {
         try {
             // Validate CSRF token
-            if (CSRF::enabled() && !CSRF::validate($this->input('csrf_token'))) {
-                throw new Exception('Invalid security token. Please refresh the page and try again.');
-            }
+            CSRF::validate($_POST['csrf_token'] ?? '');
             
             // Get credentials
             $username = $this->input('username');
             $password = $this->input('password');
-            $remember = (bool)$this->input('remember', false);
+            $remember = $this->input('remember') ? true : false;
             
             // Validate input
-            $validationRules = [
+            $rules = [
                 'username' => 'required|min:3|max:50',
-                'password' => 'required|min:' . (AUTH_MIN_PASSWORD_LENGTH ?? 8)
+                'password' => 'required|min:8'
             ];
-            
-            $this->validate($_POST, $validationRules);
-            
-            // Check rate limiting
-            if (!$this->authService->checkRateLimit($username)) {
-                throw new Exception('Too many login attempts. Please try again later.');
-            }
+            $this->validate($_POST, $rules);
             
             // Attempt login
-            $result = $this->authService->login($username, $password, $remember);
+            $result = $this->authService->authenticate($username, $password);
             
             if (!$result['success']) {
-                // Log failed attempt
-                $this->authService->logFailedAttempt($username);
-                throw new Exception($result['message'] ?? 'Invalid credentials.');
+                throw new Exception($result['message']);
+            }
+            
+            // Check if user is locked
+            if ($result['locked']) {
+                throw new Exception('Your account is locked. Please try again later.');
+            }
+            
+            // Check if email is verified
+            if (AUTH_EMAIL_VERIFICATION_REQUIRED && !$result['user']->email_verified) {
+                $this->setFlashMessage('warning', 'Please verify your email before logging in.');
+                $this->redirectToRoute('auth.login');
+                return;
             }
             
             // Check if 2FA is required
-            if ($result['requires_2fa'] ?? false) {
-                $_SESSION['2fa_user_id'] = $result['user_id'];
+            if ($result['user']->two_factor_enabled) {
+                $_SESSION['2fa_user_id'] = $result['user']->id;
                 $_SESSION['2fa_verified'] = false;
-                $this->jsonSuccess('Two-factor authentication required.', [
-                    'redirect' => $this->generateUrl('auth.2fa')
-                ]);
+                $this->redirectToRoute('auth.2fa');
+                return;
             }
             
-            // Login successful - regenerate session ID
+            // Login user
+            Auth::login($result['user']);
+            
+            // Regenerate session
             session_regenerate_id(true);
             
-            // Log successful login
-            $this->authService->logSuccessfulLogin($result['user_id']);
+            // Log activity
+            $this->logActivity('login', 'User logged in successfully');
             
-            // Get redirect URL based on role
-            $redirectUrl = $this->getRedirectUrl($result['role']);
+            // Set flash message
+            $this->setFlashMessage('success', 'Welcome back, ' . $result['user']->first_name . '!');
             
-            $this->jsonSuccess('Login successful. Welcome back!', [
-                'redirect' => $redirectUrl
-            ]);
+            // Redirect
+            $redirect = $_SESSION['intended_url'] ?? $this->generateUrl('dashboard');
+            unset($_SESSION['intended_url']);
+            $this->redirect($redirect);
             
         } catch (Exception $e) {
-            $this->jsonError($e->getMessage());
+            $this->setFlashMessage('error', $e->getMessage());
+            $this->redirectToRoute('auth.login');
         }
     }
     
     /**
-     * Display two-factor authentication page
+     * Show two-factor authentication page
      * 
      * @return void
      */
@@ -188,24 +166,23 @@ class Controller extends BaseController
         $userId = $_SESSION['2fa_user_id'] ?? null;
         
         if (!$userId) {
-            $this->redirectToRoute('login');
+            $this->redirectToRoute('auth.login');
         }
         
         $user = $this->userModel->find($userId);
         
         if (!$user) {
-            $this->redirectToRoute('login');
+            $this->redirectToRoute('auth.login');
         }
         
         $this->render('auth/2fa', [
             'title' => 'Two-Factor Authentication - ' . APP_NAME,
-            'user' => $user,
-            'module' => 'authentication'
+            'user' => $user
         ]);
     }
     
     /**
-     * Verify two-factor authentication code
+     * Verify two-factor authentication
      * 
      * @return void
      */
@@ -216,11 +193,7 @@ class Controller extends BaseController
             $code = $this->input('code');
             
             if (!$userId || !$code) {
-                throw new Exception('Invalid request. Please try again.');
-            }
-            
-            if (strlen($code) !== 6 || !ctype_digit($code)) {
-                throw new Exception('Please enter a valid 6-digit verification code.');
+                throw new Exception('Invalid request.');
             }
             
             $user = $this->userModel->find($userId);
@@ -230,24 +203,83 @@ class Controller extends BaseController
             }
             
             // Verify 2FA code
-            if ($this->authService->verifyTwoFactor($user, $code)) {
-                $_SESSION['2fa_verified'] = true;
-                $this->authService->loginUser($user);
-                
-                // Log successful 2FA verification
-                $this->authService->logActivity($userId, '2fa_verified', 'Two-factor authentication verified');
-                
-                $redirectUrl = $this->getRedirectUrl($user->role_name ?? 'user');
-                
-                $this->jsonSuccess('Two-factor authentication verified successfully.', [
-                    'redirect' => $redirectUrl
-                ]);
-            } else {
-                throw new Exception('Invalid verification code. Please try again.');
+            if (!$this->twoFactorService->verify($user, $code)) {
+                throw new Exception('Invalid verification code.');
             }
             
+            $_SESSION['2fa_verified'] = true;
+            Auth::login($user);
+            session_regenerate_id(true);
+            
+            $this->setFlashMessage('success', 'Two-factor authentication verified successfully.');
+            
+            $redirect = $_SESSION['intended_url'] ?? $this->generateUrl('dashboard');
+            unset($_SESSION['intended_url']);
+            $this->redirect($redirect);
+            
         } catch (Exception $e) {
-            $this->jsonError($e->getMessage());
+            $this->setFlashMessage('error', $e->getMessage());
+            $this->redirectToRoute('auth.2fa');
+        }
+    }
+    
+    /**
+     * Show registration page
+     * 
+     * @return void
+     */
+    public function register(): void
+    {
+        if (Auth::check()) {
+            $this->redirectToRoute('dashboard');
+        }
+        
+        $this->render('auth/register', [
+            'title' => 'Register - ' . APP_NAME
+        ]);
+    }
+    
+    /**
+     * Register new user
+     * 
+     * @return void
+     */
+    public function store(): void
+    {
+        try {
+            // Validate CSRF
+            CSRF::validate($_POST['csrf_token'] ?? '');
+            
+            // Validate input
+            $rules = [
+                'first_name' => 'required|min:2|max:50',
+                'last_name' => 'required|min:2|max:50',
+                'email' => 'required|email|unique:users,email',
+                'username' => 'required|min:3|max:30|unique:users,username',
+                'password' => 'required|min:8|confirmed',
+                'mobile' => 'required|regex:/^(\+92|0)[0-9]{10,12}$/'
+            ];
+            
+            $validated = $this->validate($_POST, $rules);
+            
+            // Create user
+            $result = $this->authService->register($validated);
+            
+            if (!$result['success']) {
+                throw new Exception($result['message']);
+            }
+            
+            // Send verification email
+            if (AUTH_EMAIL_VERIFICATION_REQUIRED) {
+                $this->emailService->sendVerificationEmail($result['user_id']);
+            }
+            
+            $this->setFlashMessage('success', auth_message('register_success'));
+            $this->redirectToRoute('auth.login');
+            
+        } catch (Exception $e) {
+            $this->setFlashMessage('error', $e->getMessage());
+            $this->redirectToRoute('auth.register');
         }
     }
     
@@ -258,27 +290,33 @@ class Controller extends BaseController
      */
     public function logout(): void
     {
-        // Log logout activity
+        // Log activity
         if (Auth::check()) {
-            $this->authService->logActivity(Auth::id(), 'logout', 'User logged out');
+            $this->logActivity('logout', 'User logged out');
         }
         
-        $this->authService->logout();
+        // Clear remember me
+        $this->authService->clearRememberToken();
         
-        $this->setFlashMessage('info', 'You have been logged out successfully.');
-        $this->redirectToRoute('login');
+        // Logout
+        Auth::logout();
+        
+        // Destroy session
+        session_destroy();
+        
+        $this->setFlashMessage('info', auth_message('logout_success'));
+        $this->redirectToRoute('auth.login');
     }
     
     /**
-     * Display forgot password page
+     * Show forgot password page
      * 
      * @return void
      */
     public function forgotPassword(): void
     {
         $this->render('auth/forgot-password', [
-            'title' => 'Reset Password - ' . APP_NAME,
-            'module' => 'authentication'
+            'title' => 'Forgot Password - ' . APP_NAME
         ]);
     }
     
@@ -292,24 +330,19 @@ class Controller extends BaseController
         try {
             $email = $this->input('email');
             
-            $validationRules = [
+            $rules = [
                 'email' => 'required|email|exists:users,email'
             ];
+            $this->validate($_POST, $rules);
             
-            $this->validate($_POST, $validationRules);
-            
-            // Check rate limiting for password reset
-            if (!$this->authService->checkResetRateLimit($email)) {
-                throw new Exception('Too many reset attempts. Please try again later.');
-            }
-            
-            $result = $this->authService->sendPasswordResetLink($email);
+            $result = $this->authService->sendResetLink($email);
             
             if (!$result['success']) {
-                throw new Exception($result['message'] ?? 'Failed to send reset link.');
+                throw new Exception($result['message']);
             }
             
-            $this->jsonSuccess('Password reset link has been sent to your email address.');
+            $this->setFlashMessage('success', auth_message('reset_sent'));
+            $this->jsonSuccess('Reset link sent.');
             
         } catch (Exception $e) {
             $this->jsonError($e->getMessage());
@@ -317,249 +350,82 @@ class Controller extends BaseController
     }
     
     /**
-     * Display reset password page
+     * Show reset password page
      * 
-     * @param array $params Route parameters
+     * @param array $params
      * @return void
      */
     public function resetPassword(array $params): void
     {
         $token = $params['token'] ?? '';
         
-        if (empty($token)) {
-            $this->setFlashMessage('error', 'Invalid password reset token.');
-            $this->redirectToRoute('login');
-        }
-        
         // Validate token
-        $user = $this->authService->validateResetToken($token);
+        $result = $this->authService->validateResetToken($token);
         
-        if (!$user) {
-            $this->setFlashMessage('error', 'Invalid or expired password reset token. Please request a new one.');
-            $this->redirectToRoute('login');
+        if (!$result['valid']) {
+            $this->setFlashMessage('error', 'Invalid or expired password reset token.');
+            $this->redirectToRoute('auth.login');
         }
         
         $this->render('auth/reset-password', [
             'title' => 'Reset Password - ' . APP_NAME,
             'token' => $token,
-            'email' => $user->email,
-            'module' => 'authentication'
+            'email' => $result['email']
         ]);
     }
     
     /**
-     * Process password reset
+     * Update password after reset
      * 
      * @return void
      */
     public function updatePassword(): void
     {
         try {
-            // Validate CSRF token
-            if (CSRF::enabled() && !CSRF::validate($this->input('csrf_token'))) {
-                throw new Exception('Invalid security token. Please refresh the page and try again.');
-            }
-            
             $token = $this->input('token');
             $password = $this->input('password');
             $passwordConfirmation = $this->input('password_confirmation');
             
-            $validationRules = [
+            $rules = [
                 'token' => 'required',
-                'password' => 'required|min:' . (AUTH_MIN_PASSWORD_LENGTH ?? 8) . '|confirmed'
+                'password' => 'required|min:8|confirmed'
             ];
-            
-            $this->validate($_POST, $validationRules);
+            $this->validate($_POST, $rules);
             
             $result = $this->authService->resetPassword($token, $password);
             
             if (!$result['success']) {
-                throw new Exception($result['message'] ?? 'Failed to reset password.');
+                throw new Exception($result['message']);
             }
             
-            $this->jsonSuccess('Password has been reset successfully. Please login with your new password.', [
-                'redirect' => $this->generateUrl('login')
-            ]);
+            $this->setFlashMessage('success', 'Password has been reset successfully.');
+            $this->redirectToRoute('auth.login');
             
         } catch (Exception $e) {
-            $this->jsonError($e->getMessage());
+            $this->setFlashMessage('error', $e->getMessage());
+            $this->redirectToRoute('auth.login');
         }
     }
     
     /**
-     * Display change password page
+     * Verify email
      * 
-     * @return void
-     */
-    public function changePassword(): void
-    {
-        $this->requireAuth();
-        
-        $this->render('auth/change-password', [
-            'title' => 'Change Password - ' . APP_NAME,
-            'module' => 'authentication'
-        ]);
-    }
-    
-    /**
-     * Process password change
-     * 
-     * @return void
-     */
-    public function processChangePassword(): void
-    {
-        try {
-            $this->requireAuth();
-            
-            // Validate CSRF token
-            if (CSRF::enabled() && !CSRF::validate($this->input('csrf_token'))) {
-                throw new Exception('Invalid security token. Please refresh the page and try again.');
-            }
-            
-            $currentPassword = $this->input('current_password');
-            $newPassword = $this->input('new_password');
-            $newPasswordConfirmation = $this->input('new_password_confirmation');
-            
-            $validationRules = [
-                'current_password' => 'required',
-                'new_password' => 'required|min:' . (AUTH_MIN_PASSWORD_LENGTH ?? 8) . '|confirmed'
-            ];
-            
-            $this->validate($_POST, $validationRules);
-            
-            $result = $this->authService->changePassword(
-                Auth::id(),
-                $currentPassword,
-                $newPassword
-            );
-            
-            if (!$result['success']) {
-                throw new Exception($result['message'] ?? 'Failed to change password.');
-            }
-            
-            // Log password change
-            $this->authService->logActivity(Auth::id(), 'password_changed', 'User changed password');
-            
-            $this->jsonSuccess('Password changed successfully.');
-            
-        } catch (Exception $e) {
-            $this->jsonError($e->getMessage());
-        }
-    }
-    
-    /**
-     * Get redirect URL based on user role
-     * 
-     * @param string $role
-     * @return string
-     */
-    private function getRedirectUrl(string $role): string
-    {
-        $roleRedirects = [
-            'super_admin' => '/dashboard',
-            'admin' => '/dashboard',
-            'compliance_officer' => '/compliance',
-            'risk_manager' => '/risk',
-            'internal_auditor' => '/audit',
-            'branch_manager' => '/dashboard'
-        ];
-        
-        $redirect = $roleRedirects[$role] ?? '/dashboard';
-        
-        return $this->generateUrl(ltrim($redirect, '/'));
-    }
-    
-    /**
-     * Display registration page
-     * 
-     * @return void
-     */
-    public function register(): void
-    {
-        if (Auth::check()) {
-            $this->redirectToRoute('dashboard');
-        }
-        
-        if (!AUTH_ALLOW_REGISTRATION ?? true) {
-            $this->setFlashMessage('error', 'Registration is currently disabled.');
-            $this->redirectToRoute('login');
-        }
-        
-        $this->render('auth/register', [
-            'title' => 'Register - ' . APP_NAME,
-            'module' => 'authentication'
-        ]);
-    }
-    
-    /**
-     * Process user registration
-     * 
-     * @return void
-     */
-    public function storeRegistration(): void
-    {
-        try {
-            if (!AUTH_ALLOW_REGISTRATION ?? true) {
-                throw new Exception('Registration is currently disabled.');
-            }
-            
-            // Validate CSRF token
-            if (CSRF::enabled() && !CSRF::validate($this->input('csrf_token'))) {
-                throw new Exception('Invalid security token. Please refresh the page and try again.');
-            }
-            
-            // Validate input
-            $validationRules = [
-                'first_name' => 'required|min:2|max:50',
-                'last_name' => 'required|min:2|max:50',
-                'email' => 'required|email|unique:users,email',
-                'username' => 'required|min:3|max:30|unique:users,username',
-                'password' => 'required|min:' . (AUTH_MIN_PASSWORD_LENGTH ?? 8) . '|confirmed',
-                'mobile' => 'required|regex:/^(\+92|0)[0-9]{10,12}$/'
-            ];
-            
-            $validated = $this->validate($_POST, $validationRules);
-            
-            // Register user
-            $result = $this->authService->register($validated);
-            
-            if (!$result['success']) {
-                throw new Exception($result['message'] ?? 'Registration failed.');
-            }
-            
-            $this->jsonSuccess('Registration successful. Please check your email to verify your account.', [
-                'redirect' => $this->generateUrl('login')
-            ]);
-            
-        } catch (Exception $e) {
-            $this->jsonError($e->getMessage());
-        }
-    }
-    
-    /**
-     * Verify email address
-     * 
-     * @param array $params Route parameters
+     * @param array $params
      * @return void
      */
     public function verifyEmail(array $params): void
     {
         $token = $params['token'] ?? '';
         
-        if (empty($token)) {
-            $this->setFlashMessage('error', 'Invalid verification token.');
-            $this->redirectToRoute('login');
-        }
-        
         $result = $this->authService->verifyEmail($token);
         
         if ($result['success']) {
-            $this->setFlashMessage('success', 'Email verified successfully! You can now login.');
+            $this->setFlashMessage('success', auth_message('email_verified'));
         } else {
-            $this->setFlashMessage('error', $result['message'] ?? 'Failed to verify email.');
+            $this->setFlashMessage('error', auth_message('email_verification_failed'));
         }
         
-        $this->redirectToRoute('login');
+        $this->redirectToRoute('auth.login');
     }
     
     /**
@@ -572,21 +438,18 @@ class Controller extends BaseController
         try {
             $email = $this->input('email');
             
-            $validationRules = [
+            $rules = [
                 'email' => 'required|email|exists:users,email'
             ];
+            $this->validate($_POST, $rules);
             
-            $this->validate($_POST, $validationRules);
+            $result = $this->authService->resendVerification($email);
             
-            $user = $this->userModel->findByEmail($email);
-            
-            if ($user->email_verified) {
-                throw new Exception('Email is already verified.');
+            if (!$result['success']) {
+                throw new Exception($result['message']);
             }
             
-            $this->authService->sendVerificationEmail($user->id);
-            
-            $this->jsonSuccess('Verification email has been resent. Please check your inbox.');
+            $this->jsonSuccess('Verification email has been resent.');
             
         } catch (Exception $e) {
             $this->jsonError($e->getMessage());
@@ -594,20 +457,49 @@ class Controller extends BaseController
     }
     
     /**
-     * Check session status (for AJAX)
+     * Change password (authenticated)
      * 
      * @return void
      */
-    public function sessionStatus(): void
+    public function changePassword(): void
     {
-        $this->json([
-            'authenticated' => Auth::check(),
-            'user' => Auth::check() ? [
-                'id' => Auth::id(),
-                'name' => Auth::user()->full_name ?? Auth::user()->username,
-                'role' => Auth::user()->role_name ?? 'user'
-            ] : null,
-            'csrf_token' => CSRF::getToken()
-        ]);
+        try {
+            $this->requireAuth();
+            CSRF::validate($_POST['csrf_token'] ?? '');
+            
+            $rules = [
+                'current_password' => 'required|min:8',
+                'new_password' => 'required|min:8|confirmed'
+            ];
+            $this->validate($_POST, $rules);
+            
+            $result = $this->authService->changePassword(
+                Auth::id(),
+                $this->input('current_password'),
+                $this->input('new_password')
+            );
+            
+            if (!$result['success']) {
+                throw new Exception($result['message']);
+            }
+            
+            $this->setFlashMessage('success', auth_message('password_changed'));
+            $this->jsonSuccess('Password changed successfully.');
+            
+        } catch (Exception $e) {
+            $this->jsonError($e->getMessage());
+        }
+    }
+    
+    /**
+     * Log activity
+     * 
+     * @param string $action
+     * @param string $description
+     * @return void
+     */
+    private function logActivity(string $action, string $description): void
+    {
+        // This will be implemented in ActivityLogService
     }
 }

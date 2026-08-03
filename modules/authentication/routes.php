@@ -1,156 +1,206 @@
 <?php
 /**
- * AI Banking GRC Platform - Authentication Module Routes
+ * Authentication Module - Routes
  * 
  * @package    AI-Banking-GRC-Platform
- * @subpackage Modules\Authentication
+ * @subpackage modules/authentication
  * @version    1.0.0
  * @author     GRC Platform Team
  * @copyright  2026 AI Banking GRC Platform
  * @license    Proprietary
  * 
- * This file defines all authentication-related routes:
- * - Login/Logout
- * - Registration
- * - Password reset
- * - Email verification
- * - Profile management
- * - Two-factor authentication
+ * This file contains all route definitions for the authentication module
  */
 
 declare(strict_types=1);
 
-use Modules\Authentication\Controller;
+// ============================================================
+// PUBLIC ROUTES (Guest Access)
+// ============================================================
 
-return [
-    // ============================================================
-    // PUBLIC ROUTES (No Authentication Required)
-    // ============================================================
+// Login routes
+$router->get('/login', 'AuthController@login', [
+    'name' => 'auth.login',
+    'middleware' => ['guest']
+]);
+
+$router->post('/login', 'AuthController@authenticate', [
+    'name' => 'auth.authenticate',
+    'middleware' => ['guest']
+]);
+
+// Registration routes
+$router->get('/register', 'AuthController@register', [
+    'name' => 'auth.register',
+    'middleware' => ['guest']
+]);
+
+$router->post('/register', 'AuthController@store', [
+    'name' => 'auth.register.submit',
+    'middleware' => ['guest']
+]);
+
+// Password reset routes
+$router->get('/password/forgot', 'AuthController@forgotPassword', [
+    'name' => 'auth.password.forgot',
+    'middleware' => ['guest']
+]);
+
+$router->post('/password/forgot', 'AuthController@sendResetLink', [
+    'name' => 'auth.password.email',
+    'middleware' => ['guest']
+]);
+
+$router->get('/password/reset/{token}', 'AuthController@resetPassword', [
+    'name' => 'auth.password.reset',
+    'middleware' => ['guest']
+]);
+
+$router->post('/password/reset', 'AuthController@updatePassword', [
+    'name' => 'auth.password.update',
+    'middleware' => ['guest']
+]);
+
+// Email verification
+$router->get('/verify/{token}', 'AuthController@verifyEmail', [
+    'name' => 'auth.verification.verify'
+]);
+
+$router->post('/verify/resend', 'AuthController@resendVerification', [
+    'name' => 'auth.verification.resend'
+]);
+
+// Two-factor authentication
+$router->get('/2fa', 'AuthController@twoFactor', [
+    'name' => 'auth.2fa',
+    'middleware' => ['auth']
+]);
+
+$router->post('/2fa/verify', 'AuthController@verifyTwoFactor', [
+    'name' => 'auth.2fa.verify',
+    'middleware' => ['auth']
+]);
+
+// ============================================================
+// PROTECTED ROUTES (Authenticated Access)
+// ============================================================
+
+$router->group(['middleware' => ['auth']], function($router) {
+    // Logout
+    $router->get('/logout', 'AuthController@logout', [
+        'name' => 'auth.logout'
+    ]);
     
-    // Login routes
-    'GET /login' => [
-        'controller' => Controller::class,
-        'method' => 'login',
-        'name' => 'login'
-    ],
-    'POST /login' => [
-        'controller' => Controller::class,
-        'method' => 'authenticate',
-        'name' => 'login.submit'
-    ],
-    'GET /logout' => [
-        'controller' => Controller::class,
-        'method' => 'logout',
-        'name' => 'logout'
-    ],
+    // Profile management
+    $router->get('/profile', 'AuthController@profile', [
+        'name' => 'auth.profile'
+    ]);
     
-    // Registration routes
-    'GET /register' => [
-        'controller' => Controller::class,
-        'method' => 'register',
-        'name' => 'register'
-    ],
-    'POST /register' => [
-        'controller' => Controller::class,
-        'method' => 'storeRegistration',
-        'name' => 'register.submit'
-    ],
+    $router->post('/profile/update', 'AuthController@updateProfile', [
+        'name' => 'auth.profile.update'
+    ]);
     
-    // Password reset routes
-    'GET /forgot-password' => [
-        'controller' => Controller::class,
-        'method' => 'forgotPassword',
-        'name' => 'password.forgot'
-    ],
-    'POST /forgot-password' => [
-        'controller' => Controller::class,
-        'method' => 'sendResetLink',
-        'name' => 'password.email'
-    ],
-    'GET /reset-password/{token}' => [
-        'controller' => Controller::class,
-        'method' => 'resetPassword',
-        'name' => 'password.reset'
-    ],
-    'POST /reset-password' => [
-        'controller' => Controller::class,
-        'method' => 'updatePassword',
-        'name' => 'password.update'
-    ],
+    $router->post('/profile/password', 'AuthController@changePassword', [
+        'name' => 'auth.profile.password'
+    ]);
     
-    // Email verification routes
-    'GET /verify-email/{token}' => [
-        'controller' => Controller::class,
-        'method' => 'verifyEmail',
-        'name' => 'verification.verify'
-    ],
-    'POST /verify-email/resend' => [
-        'controller' => Controller::class,
-        'method' => 'resendVerification',
-        'name' => 'verification.resend'
-    ],
+    $router->post('/profile/avatar', 'AuthController@updateAvatar', [
+        'name' => 'auth.profile.avatar'
+    ]);
     
-    // ============================================================
-    // PROTECTED ROUTES (Authentication Required)
-    // ============================================================
+    // Two-factor authentication settings
+    $router->post('/profile/2fa/enable', 'AuthController@enableTwoFactor', [
+        'name' => 'auth.2fa.enable'
+    ]);
     
-    // Change password
-    'GET /change-password' => [
-        'controller' => Controller::class,
-        'method' => 'changePassword',
-        'name' => 'password.change',
-        'middleware' => ['Auth']
-    ],
-    'POST /change-password' => [
-        'controller' => Controller::class,
-        'method' => 'processChangePassword',
-        'name' => 'password.change.submit',
-        'middleware' => ['Auth']
-    ],
+    $router->post('/profile/2fa/disable', 'AuthController@disableTwoFactor', [
+        'name' => 'auth.2fa.disable'
+    ]);
+    
+    $router->post('/profile/2fa/verify', 'AuthController@verifyTwoFactorSetup', [
+        'name' => 'auth.2fa.verify-setup'
+    ]);
+    
+    // Sessions management
+    $router->get('/sessions', 'AuthController@activeSessions', [
+        'name' => 'auth.sessions'
+    ]);
+    
+    $router->post('/sessions/{id}/terminate', 'AuthController@terminateSession', [
+        'name' => 'auth.sessions.terminate'
+    ]);
+    
+    $router->post('/sessions/terminate-all', 'AuthController@terminateAllSessions', [
+        'name' => 'auth.sessions.terminate-all'
+    ]);
+});
+
+// ============================================================
+// API ROUTES
+// ============================================================
+
+$router->group(['prefix' => 'api/v1/auth', 'middleware' => ['api']], function($router) {
+    // Authentication
+    $router->post('/login', 'ApiAuthController@login', [
+        'name' => 'api.auth.login'
+    ]);
+    
+    $router->post('/logout', 'ApiAuthController@logout', [
+        'name' => 'api.auth.logout',
+        'middleware' => ['auth:api']
+    ]);
+    
+    $router->post('/register', 'ApiAuthController@register', [
+        'name' => 'api.auth.register'
+    ]);
+    
+    // Password management
+    $router->post('/password/forgot', 'ApiAuthController@forgotPassword', [
+        'name' => 'api.auth.password.forgot'
+    ]);
+    
+    $router->post('/password/reset', 'ApiAuthController@resetPassword', [
+        'name' => 'api.auth.password.reset'
+    ]);
+    
+    // Email verification
+    $router->post('/verify', 'ApiAuthController@verifyEmail', [
+        'name' => 'api.auth.verify'
+    ]);
+    
+    $router->post('/verify/resend', 'ApiAuthController@resendVerification', [
+        'name' => 'api.auth.verify.resend'
+    ]);
+    
+    // Profile
+    $router->get('/profile', 'ApiAuthController@profile', [
+        'name' => 'api.auth.profile',
+        'middleware' => ['auth:api']
+    ]);
+    
+    $router->put('/profile', 'ApiAuthController@updateProfile', [
+        'name' => 'api.auth.profile.update',
+        'middleware' => ['auth:api']
+    ]);
     
     // Two-factor authentication
-    'GET /2fa' => [
-        'controller' => Controller::class,
-        'method' => 'twoFactor',
-        'name' => 'auth.2fa'
-    ],
-    'POST /2fa/verify' => [
-        'controller' => Controller::class,
-        'method' => 'verifyTwoFactor',
-        'name' => 'auth.2fa.verify'
-    ],
+    $router->post('/2fa/enable', 'ApiAuthController@enableTwoFactor', [
+        'name' => 'api.auth.2fa.enable',
+        'middleware' => ['auth:api']
+    ]);
     
-    // Session status (AJAX)
-    'GET /session/status' => [
-        'controller' => Controller::class,
-        'method' => 'sessionStatus',
-        'name' => 'session.status'
-    ],
+    $router->post('/2fa/disable', 'ApiAuthController@disableTwoFactor', [
+        'name' => 'api.auth.2fa.disable',
+        'middleware' => ['auth:api']
+    ]);
     
-    // ============================================================
-    // API ROUTES
-    // ============================================================
-    
-    // Authentication API
-    'POST /api/auth/login' => [
-        'controller' => Controller::class,
-        'method' => 'authenticate',
-        'name' => 'api.auth.login'
-    ],
-    'POST /api/auth/logout' => [
-        'controller' => Controller::class,
-        'method' => 'logout',
-        'name' => 'api.auth.logout',
-        'middleware' => ['Auth']
-    ],
-    'GET /api/auth/status' => [
-        'controller' => Controller::class,
-        'method' => 'sessionStatus',
-        'name' => 'api.auth.status'
-    ],
-    'POST /api/auth/2fa/verify' => [
-        'controller' => Controller::class,
-        'method' => 'verifyTwoFactor',
+    $router->post('/2fa/verify', 'ApiAuthController@verifyTwoFactor', [
         'name' => 'api.auth.2fa.verify'
-    ]
-];
+    ]);
+});
+
+// ============================================================
+// RETURN ROUTES
+// ============================================================
+
+return $router;
