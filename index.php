@@ -8,420 +8,367 @@
  * @copyright  2026 AI Banking GRC Platform
  * @license    Proprietary
  * 
- * Security Features:
- * - Session security with strict parameters
- * - XSS protection through output buffering
- * - SQL injection prevention via prepared statements
- * - CSRF token generation
- * - Secure cookie settings
+ * This is the main entry point for the application.
+ * Features:
+ * - Secure session handling
+ * - Global exception handling
+ * - Environment-based error reporting
+ * - CSRF protection
+ * - XSS protection
+ * - SQL injection prevention
+ * - Security headers
+ * - Maintenance mode support
+ * - Routing and dispatch
  */
 
-// ============================================================
-// SECURITY HEADERS & CONFIGURATION
-// ============================================================
-
-// Prevent direct access to sensitive files
-define('SECURE_ACCESS', true);
-
-// Set error reporting for production
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
-ini_set('error_log', __DIR__ . '/storage/logs/error.log');
-
-// Set timezone to Pakistan Standard Time
-date_default_timezone_set('Asia/Karachi');
+declare(strict_types=1);
 
 // ============================================================
-// SESSION SECURITY CONFIGURATION
+// APPLICATION BOOTSTRAP
 // ============================================================
 
-// Start secure session with strict parameters
-session_set_cookie_params([
-    'lifetime' => 3600, // 1 hour
-    'path' => '/',
-    'domain' => $_SERVER['HTTP_HOST'],
-    'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
-    'httponly' => true,
-    'samesite' => 'Strict' // CSRF protection
-]);
+// Define application root path
+define('ROOT_PATH', dirname(__DIR__));
+define('PUBLIC_PATH', __DIR__);
 
-// Start session if not already started
+// Load configuration first
+require_once ROOT_PATH . '/config/config.php';
+
+// Set error reporting based on environment
+if (APP_ENV === 'development') {
+    error_reporting(E_ALL);
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', '1');
+} else {
+    error_reporting(0);
+    ini_set('display_errors', '0');
+    ini_set('display_startup_errors', '0');
+}
+
+// Set default timezone
+date_default_timezone_set(APP_TIMEZONE);
+
+// ============================================================
+// SECURITY HEADERS (Sent before any output)
+// ============================================================
+
+if (SECURITY_HEADERS_ENABLED) {
+    // Prevent XSS attacks
+    header('X-XSS-Protection: ' . XSS_PROTECTION);
+    
+    // Prevent MIME type sniffing
+    header('X-Content-Type-Options: ' . CONTENT_TYPE_OPTIONS);
+    
+    // Prevent clickjacking
+    header('X-Frame-Options: ' . XFRAME_OPTIONS);
+    
+    // Referrer policy
+    header('Referrer-Policy: ' . REFERRER_POLICY);
+    
+    // Content Security Policy
+    if (CSP_ENABLED) {
+        header("Content-Security-Policy: default-src " . CSP_DEFAULT_SRC . "; script-src " . CSP_SCRIPT_SRC . "; style-src " . CSP_STYLE_SRC . "; font-src " . CSP_FONT_SRC . "; img-src " . CSP_IMG_SRC . "; connect-src " . CSP_CONNECT_SRC . ";");
+    }
+    
+    // HSTS - Force HTTPS (only in production)
+    if (HSTS_ENABLED) {
+        header('Strict-Transport-Security: max-age=' . HSTS_MAX_AGE . '; includeSubDomains; preload');
+    }
+    
+    // Permissions-Policy
+    header('Permissions-Policy: ' . PERMISSIONS_POLICY);
+}
+
+// ============================================================
+// SESSION CONFIGURATION
+// ============================================================
+
+// Set secure session parameters before starting session
 if (session_status() === PHP_SESSION_NONE) {
+    // Set secure cookie parameters
+    session_set_cookie_params([
+        'lifetime' => SESSION_LIFETIME,
+        'path' => SESSION_PATH,
+        'domain' => SESSION_DOMAIN,
+        'secure' => SESSION_SECURE,
+        'httponly' => SESSION_HTTP_ONLY,
+        'samesite' => SESSION_SAME_SITE
+    ]);
+    
+    // Set session name
+    session_name(SESSION_NAME);
+    
+    // Start session
     session_start();
 }
 
-// Regenerate session ID periodically to prevent session fixation
-if (!isset($_SESSION['last_regenerated'])) {
-    session_regenerate_id(true);
-    $_SESSION['last_regenerated'] = time();
-} elseif (time() - $_SESSION['last_regenerated'] > 1800) { // Regenerate every 30 minutes
-    session_regenerate_id(true);
-    $_SESSION['last_regenerated'] = time();
+// ============================================================
+// MAINTENANCE MODE CHECK
+// ============================================================
+
+if (MAINTENANCE_MODE) {
+    $clientIP = $_SERVER['REMOTE_ADDR'] ?? '';
+    $allowedIPs = MAINTENANCE_ALLOWED_IPS;
+    
+    // Allow specific IPs to bypass maintenance mode
+    if (!in_array($clientIP, $allowedIPs)) {
+        $isApi = strpos($_SERVER['REQUEST_URI'] ?? '', '/api/') === 0;
+        
+        if ($isApi) {
+            http_response_code(503);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'error' => MAINTENANCE_MESSAGE,
+                'code' => 503
+            ]);
+            exit;
+        }
+        
+        http_response_code(503);
+        require_once VIEW_PATH . '/errors/maintenance.php';
+        exit;
+    }
 }
 
 // ============================================================
-// AUTO-LOAD CONFIGURATION
+// COMPOSER AUTOLOADER
+// ============================================================
+
+$composerAutoloader = ROOT_PATH . '/vendor/autoload.php';
+if (file_exists($composerAutoloader)) {
+    require_once $composerAutoloader;
+}
+
+// ============================================================
+// CUSTOM AUTOLOADER
 // ============================================================
 
 /**
- * Custom Autoloader for PSR-4 Compliance
- * Automatically loads classes from the app directory
+ * Custom autoloader for PSR-4 compliance
+ * Handles App namespace and module autoloading
  */
 spl_autoload_register(function ($className) {
-    // Define namespace prefix
+    // App namespace
     $prefix = 'App\\';
-    $baseDir = __DIR__ . '/app/';
-
-    // Check if class uses the App namespace
-    $len = strlen($prefix);
-    if (strncmp($prefix, $className, $len) !== 0) {
-        return;
+    $baseDir = ROOT_PATH . '/app/';
+    
+    if (strncmp($prefix, $className, strlen($prefix)) === 0) {
+        $relativeClass = substr($className, strlen($prefix));
+        $filePath = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+        if (file_exists($filePath)) {
+            require_once $filePath;
+            return;
+        }
     }
-
-    // Get relative class name
-    $relativeClass = substr($className, $len);
-    $filePath = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
-
-    // Load the file if exists
-    if (file_exists($filePath)) {
-        require_once $filePath;
+    
+    // Modules namespace
+    $prefix = 'Modules\\';
+    $baseDir = ROOT_PATH . '/modules/';
+    
+    if (strncmp($prefix, $className, strlen($prefix)) === 0) {
+        $relativeClass = substr($className, strlen($prefix));
+        $parts = explode('\\', $relativeClass, 2);
+        if (count($parts) === 2) {
+            $moduleName = strtolower($parts[0]);
+            $classPath = str_replace('\\', '/', $parts[1]);
+            $filePath = $baseDir . $moduleName . '/' . $classPath . '.php';
+            if (file_exists($filePath)) {
+                require_once $filePath;
+                return;
+            }
+        }
     }
 });
 
 // ============================================================
-// ENVIRONMENT CONFIGURATION LOADER
+// GLOBAL ERROR & EXCEPTION HANDLERS
 // ============================================================
 
 /**
- * Load Environment Variables
- * Supports both .env file and environment variables
+ * Global exception handler
  */
-class EnvironmentLoader
-{
-    private static $instance = null;
-    private $config = [];
-
-    private function __construct()
-    {
-        $this->loadEnvironmentFile();
-        $this->loadServerEnvironment();
+set_exception_handler(function ($exception) {
+    // Log the exception
+    error_log(sprintf(
+        "[EXCEPTION] %s in %s:%d\n%s",
+        $exception->getMessage(),
+        $exception->getFile(),
+        $exception->getLine(),
+        $exception->getTraceAsString()
+    ));
+    
+    // Determine if API request
+    $isApi = strpos($_SERVER['REQUEST_URI'] ?? '', '/api/') === 0;
+    $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+              strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    
+    if ($isApi || $isAjax) {
+        http_response_code(500);
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => false,
+            'error' => DEBUG_MODE ? $exception->getMessage() : 'An unexpected error occurred.',
+            'code' => $exception->getCode()
+        ]);
+        exit;
     }
+    
+    // Show error page for web requests
+    if (DEBUG_MODE) {
+        require_once VIEW_PATH . '/errors/500.php';
+    } else {
+        require_once VIEW_PATH . '/errors/500.php';
+    }
+    exit;
+});
 
-    public static function getInstance()
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
+/**
+ * Global error handler
+ */
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    // Check if error reporting is disabled
+    if (!(error_reporting() & $errno)) {
+        return false;
+    }
+    
+    // Log the error
+    error_log(sprintf(
+        "[ERROR] %s in %s:%d\n",
+        $errstr,
+        $errfile,
+        $errline
+    ));
+    
+    // Throw ErrorException for all errors
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
+
+/**
+ * Shutdown function to catch fatal errors
+ */
+register_shutdown_function(function () {
+    $error = error_get_last();
+    if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        error_log(sprintf(
+            "[FATAL] %s in %s:%d\n",
+            $error['message'],
+            $error['file'],
+            $error['line']
+        ));
+        
+        // Check if API request
+        $isApi = strpos($_SERVER['REQUEST_URI'] ?? '', '/api/') === 0;
+        if ($isApi) {
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'error' => 'Internal Server Error',
+                'code' => 500
+            ]);
+            exit;
         }
-        return self::$instance;
-    }
-
-    private function loadEnvironmentFile()
-    {
-        $envFile = __DIR__ . '/.env';
-        if (file_exists($envFile)) {
-            $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            foreach ($lines as $line) {
-                if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
-                    list($key, $value) = explode('=', $line, 2);
-                    $_ENV[trim($key)] = trim($value);
-                }
-            }
-        }
-    }
-
-    private function loadServerEnvironment()
-    {
-        $this->config = [
-            'APP_ENV' => $_ENV['APP_ENV'] ?? 'production',
-            'APP_NAME' => $_ENV['APP_NAME'] ?? 'AI Banking GRC Platform',
-            'APP_URL' => $_ENV['APP_URL'] ?? 'http://localhost',
-            'DB_HOST' => $_ENV['DB_HOST'] ?? 'localhost',
-            'DB_NAME' => $_ENV['DB_NAME'] ?? 'grc_platform',
-            'DB_USER' => $_ENV['DB_USER'] ?? 'root',
-            'DB_PASS' => $_ENV['DB_PASS'] ?? '',
-            'DB_PORT' => $_ENV['DB_PORT'] ?? '3306',
-            'HASH_COST' => $_ENV['HASH_COST'] ?? 12,
-            'CSRF_TOKEN_NAME' => $_ENV['CSRF_TOKEN_NAME'] ?? 'csrf_token'
-        ];
-    }
-
-    public function get($key, $default = null)
-    {
-        return $this->config[$key] ?? $default;
-    }
-}
-
-// Initialize environment
-$env = EnvironmentLoader::getInstance();
-
-// ============================================================
-// SESSION HELPER FUNCTIONS
-// ============================================================
-
-/**
- * Check if user is authenticated
- */
-function isAuthenticated(): bool
-{
-    return isset($_SESSION['user_id']) && 
-           isset($_SESSION['authenticated']) && 
-           $_SESSION['authenticated'] === true;
-}
-
-/**
- * Check if user has specific role
- */
-function hasRole(string $role): bool
-{
-    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === $role;
-}
-
-/**
- * Generate CSRF Token
- */
-function generateCSRFToken(): string
-{
-    if (empty($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-    }
-    return $_SESSION['csrf_token'];
-}
-
-/**
- * Validate CSRF Token
- */
-function validateCSRFToken($token): bool
-{
-    return isset($_SESSION['csrf_token']) && 
-           hash_equals($_SESSION['csrf_token'], $token);
-}
-
-/**
- * Get current user ID
- */
-function getCurrentUserId(): ?int
-{
-    return $_SESSION['user_id'] ?? null;
-}
-
-// ============================================================
-// ROUTING & CONTROLLER DISPATCHER
-// ============================================================
-
-/**
- * Simple Router - Maps URLs to Controllers
- */
-class Router
-{
-    private $routes = [];
-    private $currentRoute = null;
-
-    public function __construct()
-    {
-        $this->loadRoutes();
-    }
-
-    private function loadRoutes(): void
-    {
-        // Public routes (authentication required)
-        $this->routes[''] = ['controller' => 'AuthController', 'method' => 'login', 'auth' => false];
-        $this->routes['login'] = ['controller' => 'AuthController', 'method' => 'login', 'auth' => false];
-        $this->routes['login-submit'] = ['controller' => 'AuthController', 'method' => 'authenticate', 'auth' => false];
-        $this->routes['logout'] = ['controller' => 'AuthController', 'method' => 'logout', 'auth' => true];
-        $this->routes['register'] = ['controller' => 'AuthController', 'method' => 'register', 'auth' => false];
-
-        // Protected routes (authentication required)
-        $this->routes['dashboard'] = ['controller' => 'DashboardController', 'method' => 'index', 'auth' => true];
         
-        // User Management
-        $this->routes['users'] = ['controller' => 'UserController', 'method' => 'index', 'auth' => true];
-        $this->routes['users/create'] = ['controller' => 'UserController', 'method' => 'create', 'auth' => true];
-        $this->routes['users/edit'] = ['controller' => 'UserController', 'method' => 'edit', 'auth' => true];
-        $this->routes['users/delete'] = ['controller' => 'UserController', 'method' => 'delete', 'auth' => true];
-
-        // Compliance Module
-        $this->routes['compliance'] = ['controller' => 'ComplianceController', 'method' => 'index', 'auth' => true];
-        $this->routes['compliance/tasks'] = ['controller' => 'ComplianceController', 'method' => 'tasks', 'auth' => true];
-        $this->routes['compliance/create'] = ['controller' => 'ComplianceController', 'method' => 'create', 'auth' => true];
-        $this->routes['compliance/edit'] = ['controller' => 'ComplianceController', 'method' => 'edit', 'auth' => true];
-
-        // Risk Management
-        $this->routes['risk'] = ['controller' => 'RiskController', 'method' => 'index', 'auth' => true];
-        $this->routes['risk/register'] = ['controller' => 'RiskController', 'method' => 'register', 'auth' => true];
-        $this->routes['risk/assessment'] = ['controller' => 'RiskController', 'method' => 'assessment', 'auth' => true];
-
-        // Audit Module
-        $this->routes['audit'] = ['controller' => 'AuditController', 'method' => 'index', 'auth' => true];
-        $this->routes['audit/plans'] = ['controller' => 'AuditController', 'method' => 'plans', 'auth' => true];
-        $this->routes['audit/findings'] = ['controller' => 'AuditController', 'method' => 'findings', 'auth' => true];
-
-        // Policies Module
-        $this->routes['policies'] = ['controller' => 'PolicyController', 'method' => 'index', 'auth' => true];
-        $this->routes['policies/create'] = ['controller' => 'PolicyController', 'method' => 'create', 'auth' => true];
-        
-        // AI Copilot
-        $this->routes['ai-copilot'] = ['controller' => 'AICopilotController', 'method' => 'index', 'auth' => true];
-        
-        // SBP Circulars
-        $this->routes['sbp-circulars'] = ['controller' => 'SBPController', 'method' => 'index', 'auth' => true];
-
-        // Reports
-        $this->routes['reports'] = ['controller' => 'ReportController', 'method' => 'index', 'auth' => true];
-        
-        // Notifications
-        $this->routes['notifications'] = ['controller' => 'NotificationController', 'method' => 'index', 'auth' => true];
-        
-        // Settings
-        $this->routes['settings'] = ['controller' => 'SettingsController', 'method' => 'index', 'auth' => true];
-
-        // API Routes
-        $this->routes['api/users'] = ['controller' => 'ApiController', 'method' => 'getUsers', 'auth' => true];
-        $this->routes['api/compliance'] = ['controller' => 'ApiController', 'method' => 'getCompliance', 'auth' => true];
+        require_once VIEW_PATH . '/errors/500.php';
     }
+});
 
-    public function resolve($uri): array
-    {
-        // Remove query string
-        $uri = strtok($uri, '?');
-        $uri = trim($uri, '/');
+// ============================================================
+// REQUEST & INPUT SANITIZATION
+// ============================================================
 
-        // If empty URI, load default
-        if (empty($uri)) {
-            $uri = '';
-        }
-
-        // Check if route exists
-        if (isset($this->routes[$uri])) {
-            return $this->routes[$uri];
-        }
-
-        // 404 Not Found
-        return ['controller' => 'ErrorController', 'method' => 'notFound', 'auth' => false];
+/**
+ * Sanitize input data
+ */
+function sanitizeInput($data)
+{
+    if (is_array($data)) {
+        return array_map('sanitizeInput', $data);
     }
+    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+}
+
+// Sanitize all input data
+$_GET = sanitizeInput($_GET);
+$_POST = sanitizeInput($_POST);
+
+// ============================================================
+// LOAD CONFIGURATION
+// ============================================================
+
+// Load constants
+require_once CONFIG_PATH . '/constants.php';
+
+// Load database configuration
+require_once CONFIG_PATH . '/database.php';
+
+// Load routes
+$router = null;
+if (file_exists(CONFIG_PATH . '/routes.php')) {
+    $router = require_once CONFIG_PATH . '/routes.php';
 }
 
 // ============================================================
-// APPLICATION INITIALIZATION
+// ROUTING
 // ============================================================
 
-// Initialize Router
-$router = new Router();
+// Get the current request URI and method
+$requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-// Get current URI
-$requestUri = $_SERVER['REQUEST_URI'] ?? '';
+// Remove query string and base path
 $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
 if ($basePath !== '') {
     $requestUri = str_replace($basePath, '', $requestUri);
 }
+$requestUri = strtok($requestUri, '?') ?: '/';
 
-// Resolve route
-$route = $router->resolve($requestUri);
-
-// ============================================================
-// AUTHENTICATION REDIRECTION
-// ============================================================
-
-$isAuthenticated = isAuthenticated();
-$requiresAuth = $route['auth'] ?? false;
-
-// If authenticated and on login page, redirect to dashboard
-if ($isAuthenticated && ($route['controller'] === 'AuthController' && $route['method'] === 'login')) {
-    header('Location: dashboard');
-    exit;
-}
-
-// If not authenticated and route requires auth, redirect to login
-if (!$isAuthenticated && $requiresAuth) {
-    header('Location: login');
+// Handle 404 if router is not loaded
+if (!$router) {
+    http_response_code(404);
+    require_once VIEW_PATH . '/errors/404.php';
     exit;
 }
 
 // ============================================================
-// CONTROLLER DISPATCHER
+// DISPATCH ROUTE
 // ============================================================
 
 try {
-    $controllerName = 'App\\Controllers\\' . $route['controller'];
-    $methodName = $route['method'];
-
-    if (class_exists($controllerName)) {
-        $controller = new $controllerName();
-        if (method_exists($controller, $methodName)) {
-            // If authentication required and user not authenticated, redirect
-            if ($requiresAuth && !$isAuthenticated) {
-                header('Location: login');
-                exit;
-            }
-            $controller->$methodName();
-        } else {
-            throw new Exception("Method {$methodName} not found in {$controllerName}");
-        }
-    } else {
-        throw new Exception("Controller {$controllerName} not found");
-    }
+    // Dispatch the route
+    $router->dispatch($requestUri, $requestMethod);
 } catch (Exception $e) {
     // Log error
-    error_log("Router Error: " . $e->getMessage());
+    error_log(sprintf(
+        "[ROUTING ERROR] %s\nTrace: %s\n",
+        $e->getMessage(),
+        $e->getTraceAsString()
+    ));
     
-    // Display friendly error page
-    ?>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Error - <?php echo $env->get('APP_NAME'); ?></title>
-        <!-- Bootstrap 5 -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Font Awesome 6 -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <style>
-            body { 
-                background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-                min-height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .error-card {
-                background: #FFFFFF;
-                border-radius: 20px;
-                padding: 50px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-                max-width: 500px;
-                text-align: center;
-            }
-            .error-icon {
-                font-size: 80px;
-                color: #DC2626;
-                margin-bottom: 20px;
-            }
-            .error-title {
-                color: #0F172A;
-                font-weight: 700;
-                margin-bottom: 15px;
-            }
-            .error-message {
-                color: #6B7280;
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="error-card">
-            <div class="error-icon">
-                <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <h1 class="error-title">Oops! Something went wrong</h1>
-            <p class="error-message">
-                We encountered an unexpected error. Please try again or contact support.
-            </p>
-            <a href="dashboard" class="btn btn-primary btn-lg">
-                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-            </a>
-        </div>
-    </body>
-    </html>
-    <?php
+    // Handle 404 for unknown routes
+    if ($e->getCode() === 404) {
+        http_response_code(404);
+        require_once VIEW_PATH . '/errors/404.php';
+    } else {
+        throw $e;
+    }
 }
+
+// ============================================================
+// SESSION CLEANUP
+// ============================================================
+
+// Regenerate session ID periodically for security
+if (isset($_SESSION['last_regenerated'])) {
+    if (time() - $_SESSION['last_regenerated'] > SESSION_REGENERATE_INTERVAL) {
+        session_regenerate_id(true);
+        $_SESSION['last_regenerated'] = time();
+    }
+} else {
+    $_SESSION['last_regenerated'] = time();
+}
+
+// ============================================================
+// END OF ENTRY POINT
+// ============================================================

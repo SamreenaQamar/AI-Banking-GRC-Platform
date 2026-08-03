@@ -1,6 +1,6 @@
 <?php
 /**
- * AI Banking GRC Platform - Route Configuration
+ * AI Banking GRC Platform - Enterprise Route Configuration
  * 
  * @package    AI-Banking-GRC-Platform
  * @version    1.0.0
@@ -14,14 +14,15 @@
  * - Role-based access control
  * - Middleware support
  * - RESTful resource routing
+ * - Module-based route grouping
  * - 404 error handling
- * - Route grouping for organization
+ * - API versioning
  */
 
 declare(strict_types=1);
 
 // ============================================================
-// ROUTER CLASS DEFINITION
+// ROUTER CLASS DEFINITION (Enterprise)
 // ============================================================
 
 /**
@@ -32,8 +33,10 @@ declare(strict_types=1);
  * - Middleware pipeline
  * - Role-based authorization
  * - Named routes
- * - Route parameters
+ * - Route parameters with validation
  * - Route grouping
+ * - Resource routing
+ * - API versioning
  */
 class Router
 {
@@ -72,6 +75,18 @@ class Router
      * @var array
      */
     private array $params = [];
+    
+    /**
+     * Route parameter patterns
+     * @var array
+     */
+    private array $patterns = [
+        'id' => '[0-9]+',
+        'slug' => '[a-z0-9-]+',
+        'uuid' => '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
+        'token' => '[a-f0-9]{32,64}',
+        'any' => '[^/]+'
+    ];
     
     /**
      * Register a GET route
@@ -139,6 +154,32 @@ class Router
     }
     
     /**
+     * Register an OPTIONS route
+     * 
+     * @param string $uri Route URI
+     * @param string|array $handler Controller@method or callable
+     * @param array $options Route options
+     * @return Route
+     */
+    public function options(string $uri, $handler, array $options = []): Route
+    {
+        return $this->addRoute('OPTIONS', $uri, $handler, $options);
+    }
+    
+    /**
+     * Register a HEAD route
+     * 
+     * @param string $uri Route URI
+     * @param string|array $handler Controller@method or callable
+     * @param array $options Route options
+     * @return Route
+     */
+    public function head(string $uri, $handler, array $options = []): Route
+    {
+        return $this->addRoute('HEAD', $uri, $handler, $options);
+    }
+    
+    /**
      * Register routes for all HTTP methods
      * 
      * @param string $uri Route URI
@@ -164,7 +205,7 @@ class Router
     {
         // Apply group prefix if in group
         if ($this->currentGroup) {
-            $uri = rtrim($this->currentGroup['prefix'], '/') . '/' . ltrim($uri, '/');
+            $uri = rtrim($this->currentGroup['prefix'] ?? '', '/') . '/' . ltrim($uri, '/');
             $options['middleware'] = array_merge(
                 $this->currentGroup['middleware'] ?? [],
                 $options['middleware'] ?? []
@@ -173,7 +214,14 @@ class Router
                 $this->currentGroup['roles'] ?? [],
                 $options['roles'] ?? []
             );
+            $options['permissions'] = array_merge(
+                $this->currentGroup['permissions'] ?? [],
+                $options['permissions'] ?? []
+            );
         }
+        
+        // Normalize URI
+        $uri = $this->normalizeUri($uri);
         
         // Create route object
         $route = new Route($method, $uri, $handler, $options);
@@ -187,6 +235,40 @@ class Router
         }
         
         return $route;
+    }
+    
+    /**
+     * Normalize URI
+     * 
+     * @param string $uri
+     * @return string
+     */
+    private function normalizeUri(string $uri): string
+    {
+        // Ensure leading slash
+        if (!str_starts_with($uri, '/')) {
+            $uri = '/' . $uri;
+        }
+        
+        // Remove trailing slash except for root
+        if ($uri !== '/' && str_ends_with($uri, '/')) {
+            $uri = rtrim($uri, '/');
+        }
+        
+        return $uri;
+    }
+    
+    /**
+     * Add a route parameter pattern
+     * 
+     * @param string $name Parameter name
+     * @param string $pattern Regex pattern
+     * @return Router
+     */
+    public function pattern(string $name, string $pattern): Router
+    {
+        $this->patterns[$name] = $pattern;
+        return $this;
     }
     
     /**
@@ -219,6 +301,12 @@ class Router
         $baseUri = $resource;
         $name = $options['name'] ?? $resource;
         $only = $options['only'] ?? ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
+        $except = $options['except'] ?? [];
+        
+        // Remove except from only
+        if (!empty($except)) {
+            $only = array_diff($only, $except);
+        }
         
         $actions = [
             'index' => ['GET', '', 'index'],
@@ -227,7 +315,48 @@ class Router
             'show' => ['GET', '/{id}', 'show'],
             'edit' => ['GET', '/{id}/edit', 'edit'],
             'update' => ['PUT', '/{id}', 'update'],
-            'destroy' => ['DELETE', '/{id}', 'destroy'],
+            'destroy' => ['DELETE', '/{id}', 'destroy']
+        ];
+        
+        foreach ($actions as $action => [$method, $uri, $handlerMethod]) {
+            if (in_array($action, $only)) {
+                $routeName = $name . '.' . $action;
+                $this->addRoute(
+                    $method,
+                    $baseUri . $uri,
+                    $controller . '@' . $handlerMethod,
+                    ['name' => $routeName]
+                );
+            }
+        }
+    }
+    
+    /**
+     * Register API resource routes
+     * 
+     * @param string $resource Resource name
+     * @param string $controller Controller class
+     * @param array $options Additional options
+     * @return void
+     */
+    public function apiResource(string $resource, string $controller, array $options = []): void
+    {
+        $baseUri = $resource;
+        $name = $options['name'] ?? $resource;
+        $only = $options['only'] ?? ['index', 'store', 'show', 'update', 'destroy'];
+        $except = $options['except'] ?? [];
+        
+        // Remove except from only
+        if (!empty($except)) {
+            $only = array_diff($only, $except);
+        }
+        
+        $actions = [
+            'index' => ['GET', '', 'index'],
+            'store' => ['POST', '', 'store'],
+            'show' => ['GET', '/{id}', 'show'],
+            'update' => ['PUT', '/{id}', 'update'],
+            'destroy' => ['DELETE', '/{id}', 'destroy']
         ];
         
         foreach ($actions as $action => [$method, $uri, $handlerMethod]) {
@@ -253,7 +382,12 @@ class Router
     public function dispatch(string $uri, string $method)
     {
         // Normalize URI
-        $uri = '/' . ltrim($uri, '/');
+        $uri = $this->normalizeUri($uri);
+        
+        // Check for OPTIONS request (CORS preflight)
+        if ($method === 'OPTIONS') {
+            return $this->handleOptions($uri);
+        }
         
         // Check for exact match first
         if (isset($this->routes[$method][$uri])) {
@@ -279,6 +413,22 @@ class Router
     }
     
     /**
+     * Handle OPTIONS request (CORS)
+     * 
+     * @param string $uri
+     * @return void
+     */
+    private function handleOptions(string $uri): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, X-CSRF-TOKEN');
+        header('Access-Control-Max-Age: 86400');
+        http_response_code(204);
+        exit;
+    }
+    
+    /**
      * Match a route pattern against URI
      * 
      * @param string $pattern Route pattern
@@ -287,8 +437,13 @@ class Router
      */
     private function matchRoute(string $pattern, string $uri): bool
     {
-        // Convert pattern to regex
-        $regex = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>[^/]+)', $pattern);
+        // Convert pattern to regex with parameter patterns
+        $regex = preg_replace_callback('/\{([a-zA-Z0-9_]+)(?::([^}]+))?\}/', function($matches) {
+            $paramName = $matches[1];
+            $pattern = isset($matches[2]) ? $matches[2] : ($this->patterns[$paramName] ?? '[^/]+');
+            return '(?P<' . $paramName . '>' . $pattern . ')';
+        }, $pattern);
+        
         $regex = '#^' . $regex . '$#';
         
         if (preg_match($regex, $uri, $matches)) {
@@ -320,6 +475,12 @@ class Router
             return $this->handleUnauthorized();
         }
         
+        // Check permissions
+        $permissions = $route->getPermissions();
+        if (!empty($permissions) && !$this->checkPermissions($permissions)) {
+            return $this->handleForbidden();
+        }
+        
         // Execute route handler
         $handler = $route->getHandler();
         
@@ -337,7 +498,11 @@ class Router
                 $controller = new $controllerName();
                 if (method_exists($controller, $method)) {
                     return $controller->$method($this->params);
+                } else {
+                    throw new RuntimeException("Method {$method} not found in {$controllerName}");
                 }
+            } else {
+                throw new RuntimeException("Controller {$controllerName} not found");
             }
         }
         
@@ -359,13 +524,22 @@ class Router
         }
         
         if (is_string($middleware)) {
+            // Check if middleware is in App namespace
             $class = 'App\\Middleware\\' . $middleware;
+            if (!class_exists($class)) {
+                // Check modules middleware
+                $class = 'Modules\\' . ucfirst($middleware) . '\\Middleware\\' . $middleware . 'Middleware';
+            }
+            
             if (class_exists($class)) {
                 $instance = new $class();
                 if (method_exists($instance, 'handle')) {
                     $instance->handle();
+                    return;
                 }
             }
+            
+            throw new RuntimeException("Middleware {$middleware} not found");
         }
     }
     
@@ -384,9 +558,58 @@ class Router
         
         // Get current user role from session
         $userRole = $_SESSION['user_role'] ?? null;
+        $userLevel = $_SESSION['role_level'] ?? 0;
+        
+        // Super admin has all access
+        if ($userRole === 'super_admin') {
+            return true;
+        }
         
         // Check if user has required role
-        return in_array($userRole, $roles);
+        if (in_array($userRole, $roles)) {
+            return true;
+        }
+        
+        // Check role hierarchy (higher level roles can access lower level)
+        foreach ($roles as $role) {
+            $requiredLevel = ROLE_HIERARCHY[$role] ?? 0;
+            if ($userLevel >= $requiredLevel) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Check if user has required permissions
+     * 
+     * @param array $permissions Required permissions
+     * @return bool
+     */
+    private function checkPermissions(array $permissions): bool
+    {
+        // If no permissions required, allow access
+        if (empty($permissions)) {
+            return true;
+        }
+        
+        // Get current user permissions from session
+        $userPermissions = $_SESSION['user_permissions'] ?? [];
+        
+        // Super admin has all permissions
+        if (in_array('*', $userPermissions)) {
+            return true;
+        }
+        
+        // Check if user has required permission
+        foreach ($permissions as $permission) {
+            if (in_array($permission, $userPermissions)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /**
@@ -403,11 +626,14 @@ class Router
             return $this->executeRoute($this->routes['*']['/404']);
         }
         
-        // Default 404 response
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
-            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        // Check if it's an API request
+        if ($this->isApiRequest()) {
             header('Content-Type: application/json');
-            echo json_encode(['error' => 'Route not found', 'status' => 404]);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Route not found',
+                'code' => 404
+            ]);
             exit;
         }
         
@@ -425,16 +651,58 @@ class Router
     {
         http_response_code(401);
         
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
-            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        if ($this->isApiRequest()) {
             header('Content-Type: application/json');
-            echo json_encode(['error' => 'Unauthorized access', 'status' => 401]);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Unauthorized',
+                'code' => 401
+            ]);
             exit;
         }
+        
+        // Store intended URL
+        $_SESSION['intended_url'] = $_SERVER['REQUEST_URI'];
         
         // Redirect to login
         header('Location: /login');
         exit;
+    }
+    
+    /**
+     * Handle 403 Forbidden
+     * 
+     * @return mixed
+     */
+    private function handleForbidden()
+    {
+        http_response_code(403);
+        
+        if ($this->isApiRequest()) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'error' => 'Forbidden',
+                'code' => 403
+            ]);
+            exit;
+        }
+        
+        // Render 403 view
+        require_once VIEW_PATH . '/errors/403.php';
+        exit;
+    }
+    
+    /**
+     * Check if request is API request
+     * 
+     * @return bool
+     */
+    private function isApiRequest(): bool
+    {
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        return strpos($uri, '/api/') === 0 || 
+               (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false);
     }
     
     /**
@@ -525,9 +793,20 @@ class Route
         return $this->options['roles'] ?? [];
     }
     
+    public function getPermissions(): array
+    {
+        return $this->options['permissions'] ?? [];
+    }
+    
     public function getName(): ?string
     {
         return $this->options['name'] ?? null;
+    }
+    
+    public function where(string $param, string $pattern): Route
+    {
+        $this->uri = str_replace('{' . $param . '}', '{' . $param . ':' . $pattern . '}', $this->uri);
+        return $this;
     }
 }
 
@@ -538,6 +817,24 @@ class Route
 // Initialize router
 $router = new Router();
 
+// Load module routes
+$modulesPath = BASE_PATH . '/modules';
+$moduleDirs = [
+    'authentication', 'dashboard', 'users', 'compliance', 'risk', 
+    'audit', 'policies', 'ai', 'reports', 'notifications', 'settings'
+];
+
+foreach ($moduleDirs as $module) {
+    $routeFile = $modulesPath . '/' . $module . '/routes.php';
+    if (file_exists($routeFile)) {
+        require_once $routeFile;
+    }
+}
+
+// ============================================================
+// ADDITIONAL ROUTES (Fallback)
+// ============================================================
+
 // ============================================================
 // PUBLIC ROUTES (No Authentication Required)
 // ============================================================
@@ -545,259 +842,8 @@ $router = new Router();
 // Landing page
 $router->get('/', 'HomeController@index', ['name' => 'home']);
 
-// Authentication routes
-$router->get('/login', 'AuthController@login', ['name' => 'login']);
-$router->post('/login', 'AuthController@authenticate', ['name' => 'login.submit']);
-$router->get('/logout', 'AuthController@logout', ['name' => 'logout']);
-$router->get('/register', 'AuthController@register', ['name' => 'register']);
-$router->post('/register', 'AuthController@store', ['name' => 'register.submit']);
-
-// Password reset routes
-$router->get('/password/forgot', 'AuthController@forgotPassword', ['name' => 'password.forgot']);
-$router->post('/password/forgot', 'AuthController@sendResetLink', ['name' => 'password.email']);
-$router->get('/password/reset/{token}', 'AuthController@resetPassword', ['name' => 'password.reset']);
-$router->post('/password/reset', 'AuthController@updatePassword', ['name' => 'password.update']);
-
-// Verification routes
-$router->get('/verify/{token}', 'AuthController@verifyEmail', ['name' => 'verification.verify']);
-$router->post('/verify/resend', 'AuthController@resendVerification', ['name' => 'verification.resend']);
-
-// ============================================================
-// AUTHENTICATED ROUTES GROUP
-// ============================================================
-
-$router->group(['middleware' => ['Auth'], 'roles' => ['user', 'admin', 'super_admin']], function($router) {
-    
-    // ============================================================
-    // DASHBOARD
-    // ============================================================
-    $router->get('/dashboard', 'DashboardController@index', ['name' => 'dashboard']);
-    $router->get('/dashboard/stats', 'DashboardController@stats', ['name' => 'dashboard.stats']);
-    $router->get('/dashboard/charts', 'DashboardController@charts', ['name' => 'dashboard.charts']);
-    
-    // ============================================================
-    // USER MANAGEMENT
-    // ============================================================
-    $router->group(['prefix' => 'users', 'roles' => ['admin', 'super_admin']], function($router) {
-        $router->get('/', 'UserController@index', ['name' => 'users.index']);
-        $router->get('/create', 'UserController@create', ['name' => 'users.create']);
-        $router->post('/', 'UserController@store', ['name' => 'users.store']);
-        $router->get('/{id}', 'UserController@show', ['name' => 'users.show']);
-        $router->get('/{id}/edit', 'UserController@edit', ['name' => 'users.edit']);
-        $router->put('/{id}', 'UserController@update', ['name' => 'users.update']);
-        $router->delete('/{id}', 'UserController@delete', ['name' => 'users.delete']);
-        $router->post('/{id}/roles', 'UserController@assignRoles', ['name' => 'users.roles']);
-        $router->post('/{id}/status', 'UserController@updateStatus', ['name' => 'users.status']);
-        $router->post('/{id}/password', 'UserController@resetPassword', ['name' => 'users.password']);
-    });
-    
-    // Profile routes (accessible by all authenticated users)
-    $router->group(['prefix' => 'profile'], function($router) {
-        $router->get('/', 'ProfileController@index', ['name' => 'profile.index']);
-        $router->put('/', 'ProfileController@update', ['name' => 'profile.update']);
-        $router->post('/password', 'ProfileController@changePassword', ['name' => 'profile.password']);
-        $router->post('/avatar', 'ProfileController@updateAvatar', ['name' => 'profile.avatar']);
-        $router->post('/two-factor', 'ProfileController@twoFactor', ['name' => 'profile.twofactor']);
-    });
-    
-    // ============================================================
-    // COMPLIANCE MODULE
-    // ============================================================
-    $router->group(['prefix' => 'compliance'], function($router) {
-        $router->get('/', 'ComplianceController@index', ['name' => 'compliance.index']);
-        $router->get('/tasks', 'ComplianceController@tasks', ['name' => 'compliance.tasks']);
-        $router->get('/create', 'ComplianceController@create', ['name' => 'compliance.create']);
-        $router->post('/', 'ComplianceController@store', ['name' => 'compliance.store']);
-        $router->get('/{id}', 'ComplianceController@show', ['name' => 'compliance.show']);
-        $router->get('/{id}/edit', 'ComplianceController@edit', ['name' => 'compliance.edit']);
-        $router->put('/{id}', 'ComplianceController@update', ['name' => 'compliance.update']);
-        $router->delete('/{id}', 'ComplianceController@delete', ['name' => 'compliance.delete']);
-        $router->post('/{id}/status', 'ComplianceController@updateStatus', ['name' => 'compliance.status']);
-        $router->post('/{id}/evidence', 'ComplianceController@uploadEvidence', ['name' => 'compliance.evidence']);
-        $router->get('/frameworks', 'ComplianceController@frameworks', ['name' => 'compliance.frameworks']);
-        $router->get('/categories', 'ComplianceController@categories', ['name' => 'compliance.categories']);
-        $router->get('/dashboard', 'ComplianceController@dashboard', ['name' => 'compliance.dashboard']);
-        $router->get('/export', 'ComplianceController@export', ['name' => 'compliance.export']);
-    });
-    
-    // ============================================================
-    // RISK MANAGEMENT MODULE
-    // ============================================================
-    $router->group(['prefix' => 'risk'], function($router) {
-        $router->get('/', 'RiskController@index', ['name' => 'risk.index']);
-        $router->get('/register', 'RiskController@register', ['name' => 'risk.register']);
-        $router->get('/create', 'RiskController@create', ['name' => 'risk.create']);
-        $router->post('/', 'RiskController@store', ['name' => 'risk.store']);
-        $router->get('/{id}', 'RiskController@show', ['name' => 'risk.show']);
-        $router->get('/{id}/edit', 'RiskController@edit', ['name' => 'risk.edit']);
-        $router->put('/{id}', 'RiskController@update', ['name' => 'risk.update']);
-        $router->delete('/{id}', 'RiskController@delete', ['name' => 'risk.delete']);
-        $router->post('/{id}/assess', 'RiskController@assess', ['name' => 'risk.assess']);
-        $router->post('/{id}/mitigate', 'RiskController@mitigate', ['name' => 'risk.mitigate']);
-        $router->get('/dashboard', 'RiskController@dashboard', ['name' => 'risk.dashboard']);
-        $router->get('/heatmap', 'RiskController@heatmap', ['name' => 'risk.heatmap']);
-        $router->get('/export', 'RiskController@export', ['name' => 'risk.export']);
-    });
-    
-    // ============================================================
-    // AUDIT MODULE
-    // ============================================================
-    $router->group(['prefix' => 'audit', 'roles' => ['internal_auditor', 'admin', 'super_admin']], function($router) {
-        $router->get('/', 'AuditController@index', ['name' => 'audit.index']);
-        $router->get('/plans', 'AuditController@plans', ['name' => 'audit.plans']);
-        $router->get('/plans/create', 'AuditController@createPlan', ['name' => 'audit.plan.create']);
-        $router->post('/plans', 'AuditController@storePlan', ['name' => 'audit.plan.store']);
-        $router->get('/plans/{id}', 'AuditController@showPlan', ['name' => 'audit.plan.show']);
-        $router->put('/plans/{id}', 'AuditController@updatePlan', ['name' => 'audit.plan.update']);
-        $router->delete('/plans/{id}', 'AuditController@deletePlan', ['name' => 'audit.plan.delete']);
-        $router->get('/findings', 'AuditController@findings', ['name' => 'audit.findings']);
-        $router->get('/findings/create', 'AuditController@createFinding', ['name' => 'audit.finding.create']);
-        $router->post('/findings', 'AuditController@storeFinding', ['name' => 'audit.finding.store']);
-        $router->get('/findings/{id}', 'AuditController@showFinding', ['name' => 'audit.finding.show']);
-        $router->put('/findings/{id}', 'AuditController@updateFinding', ['name' => 'audit.finding.update']);
-        $router->delete('/findings/{id}', 'AuditController@deleteFinding', ['name' => 'audit.finding.delete']);
-        $router->post('/findings/{id}/status', 'AuditController@updateFindingStatus', ['name' => 'audit.finding.status']);
-        $router->get('/dashboard', 'AuditController@dashboard', ['name' => 'audit.dashboard']);
-        $router->get('/schedule', 'AuditController@schedule', ['name' => 'audit.schedule']);
-    });
-    
-    // ============================================================
-    // POLICIES MODULE
-    // ============================================================
-    $router->group(['prefix' => 'policies'], function($router) {
-        $router->get('/', 'PolicyController@index', ['name' => 'policies.index']);
-        $router->get('/create', 'PolicyController@create', ['name' => 'policies.create']);
-        $router->post('/', 'PolicyController@store', ['name' => 'policies.store']);
-        $router->get('/{id}', 'PolicyController@show', ['name' => 'policies.show']);
-        $router->get('/{id}/edit', 'PolicyController@edit', ['name' => 'policies.edit']);
-        $router->put('/{id}', 'PolicyController@update', ['name' => 'policies.update']);
-        $router->delete('/{id}', 'PolicyController@delete', ['name' => 'policies.delete']);
-        $router->post('/{id}/approve', 'PolicyController@approve', ['name' => 'policies.approve']);
-        $router->post('/{id}/acknowledge', 'PolicyController@acknowledge', ['name' => 'policies.acknowledge']);
-        $router->get('/versions/{id}', 'PolicyController@versions', ['name' => 'policies.versions']);
-        $router->get('/dashboard', 'PolicyController@dashboard', ['name' => 'policies.dashboard']);
-    });
-    
-    // ============================================================
-    // SBP CIRCULARS MODULE
-    // ============================================================
-    $router->group(['prefix' => 'sbp-circulars'], function($router) {
-        $router->get('/', 'SBPController@index', ['name' => 'sbp.index']);
-        $router->get('/create', 'SBPController@create', ['name' => 'sbp.create']);
-        $router->post('/', 'SBPController@store', ['name' => 'sbp.store']);
-        $router->get('/{id}', 'SBPController@show', ['name' => 'sbp.show']);
-        $router->get('/{id}/edit', 'SBPController@edit', ['name' => 'sbp.edit']);
-        $router->put('/{id}', 'SBPController@update', ['name' => 'sbp.update']);
-        $router->delete('/{id}', 'SBPController@delete', ['name' => 'sbp.delete']);
-        $router->post('/{id}/implement', 'SBPController@implement', ['name' => 'sbp.implement']);
-        $router->get('/dashboard', 'SBPController@dashboard', ['name' => 'sbp.dashboard']);
-        $router->get('/compliance', 'SBPController@compliance', ['name' => 'sbp.compliance']);
-    });
-    
-    // ============================================================
-    // AI COPILOT MODULE
-    // ============================================================
-    $router->group(['prefix' => 'ai'], function($router) {
-        $router->get('/', 'AICopilotController@index', ['name' => 'ai.index']);
-        $router->post('/chat', 'AICopilotController@chat', ['name' => 'ai.chat']);
-        $router->post('/analyze', 'AICopilotController@analyze', ['name' => 'ai.analyze']);
-        $router->post('/recommend', 'AICopilotController@recommend', ['name' => 'ai.recommend']);
-        $router->post('/summarize', 'AICopilotController@summarize', ['name' => 'ai.summarize']);
-        $router->get('/insights', 'AICopilotController@insights', ['name' => 'ai.insights']);
-        $router->get('/dashboard', 'AICopilotController@dashboard', ['name' => 'ai.dashboard']);
-        $router->post('/feedback', 'AICopilotController@feedback', ['name' => 'ai.feedback']);
-    });
-    
-    // ============================================================
-    // REPORTS MODULE
-    // ============================================================
-    $router->group(['prefix' => 'reports'], function($router) {
-        $router->get('/', 'ReportController@index', ['name' => 'reports.index']);
-        $router->get('/create', 'ReportController@create', ['name' => 'reports.create']);
-        $router->post('/', 'ReportController@generate', ['name' => 'reports.generate']);
-        $router->get('/{id}', 'ReportController@show', ['name' => 'reports.show']);
-        $router->delete('/{id}', 'ReportController@delete', ['name' => 'reports.delete']);
-        $router->get('/{id}/download', 'ReportController@download', ['name' => 'reports.download']);
-        $router->post('/{id}/share', 'ReportController@share', ['name' => 'reports.share']);
-        $router->get('/dashboard', 'ReportController@dashboard', ['name' => 'reports.dashboard']);
-        $router->get('/templates', 'ReportController@templates', ['name' => 'reports.templates']);
-    });
-    
-    // ============================================================
-    // NOTIFICATIONS MODULE
-    // ============================================================
-    $router->group(['prefix' => 'notifications'], function($router) {
-        $router->get('/', 'NotificationController@index', ['name' => 'notifications.index']);
-        $router->get('/unread', 'NotificationController@unread', ['name' => 'notifications.unread']);
-        $router->post('/{id}/read', 'NotificationController@markRead', ['name' => 'notifications.read']);
-        $router->post('/read-all', 'NotificationController@markAllRead', ['name' => 'notifications.read-all']);
-        $router->delete('/{id}', 'NotificationController@delete', ['name' => 'notifications.delete']);
-    });
-    
-    // ============================================================
-    // SETTINGS MODULE
-    // ============================================================
-    $router->group(['prefix' => 'settings', 'roles' => ['admin', 'super_admin']], function($router) {
-        $router->get('/', 'SettingsController@index', ['name' => 'settings.index']);
-        $router->post('/general', 'SettingsController@updateGeneral', ['name' => 'settings.general']);
-        $router->post('/security', 'SettingsController@updateSecurity', ['name' => 'settings.security']);
-        $router->post('/email', 'SettingsController@updateEmail', ['name' => 'settings.email']);
-        $router->post('/ai', 'SettingsController@updateAI', ['name' => 'settings.ai']);
-        $router->post('/appearance', 'SettingsController@updateAppearance', ['name' => 'settings.appearance']);
-        $router->post('/backup', 'SettingsController@backup', ['name' => 'settings.backup']);
-        $router->post('/restore', 'SettingsController@restore', ['name' => 'settings.restore']);
-    });
-});
-
-// ============================================================
-// API ROUTES
-// ============================================================
-
-$router->group(['prefix' => 'api', 'middleware' => ['ApiAuth']], function($router) {
-    
-    // API v1 routes
-    $router->group(['prefix' => 'v1'], function($router) {
-        
-        // Dashboard API
-        $router->get('/dashboard/stats', 'ApiController@dashboardStats', ['name' => 'api.dashboard.stats']);
-        $router->get('/dashboard/charts', 'ApiController@dashboardCharts', ['name' => 'api.dashboard.charts']);
-        $router->get('/dashboard/recent', 'ApiController@recentActivities', ['name' => 'api.dashboard.recent']);
-        
-        // Compliance API
-        $router->get('/compliance', 'ApiController@complianceList', ['name' => 'api.compliance.list']);
-        $router->get('/compliance/{id}', 'ApiController@complianceShow', ['name' => 'api.compliance.show']);
-        $router->post('/compliance', 'ApiController@complianceStore', ['name' => 'api.compliance.store']);
-        $router->put('/compliance/{id}', 'ApiController@complianceUpdate', ['name' => 'api.compliance.update']);
-        $router->delete('/compliance/{id}', 'ApiController@complianceDelete', ['name' => 'api.compliance.delete']);
-        
-        // Risk API
-        $router->get('/risk', 'ApiController@riskList', ['name' => 'api.risk.list']);
-        $router->get('/risk/{id}', 'ApiController@riskShow', ['name' => 'api.risk.show']);
-        $router->post('/risk', 'ApiController@riskStore', ['name' => 'api.risk.store']);
-        $router->put('/risk/{id}', 'ApiController@riskUpdate', ['name' => 'api.risk.update']);
-        $router->delete('/risk/{id}', 'ApiController@riskDelete', ['name' => 'api.risk.delete']);
-        
-        // Audit API
-        $router->get('/audit', 'ApiController@auditList', ['name' => 'api.audit.list']);
-        $router->get('/audit/{id}', 'ApiController@auditShow', ['name' => 'api.audit.show']);
-        
-        // Reports API
-        $router->get('/reports', 'ApiController@reportList', ['name' => 'api.reports.list']);
-        $router->post('/reports/generate', 'ApiController@reportGenerate', ['name' => 'api.reports.generate']);
-        
-        // Users API
-        $router->get('/users', 'ApiController@userList', ['name' => 'api.users.list']);
-        $router->get('/users/{id}', 'ApiController@userShow', ['name' => 'api.users.show']);
-        
-        // AI API
-        $router->post('/ai/chat', 'ApiController@aiChat', ['name' => 'api.ai.chat']);
-        $router->post('/ai/analyze', 'ApiController@aiAnalyze', ['name' => 'api.ai.analyze']);
-        
-        // System API
-        $router->get('/system/health', 'ApiController@systemHealth', ['name' => 'api.system.health']);
-        $router->get('/system/info', 'ApiController@systemInfo', ['name' => 'api.system.info']);
-    });
-});
+// Authentication routes (handled by authentication module)
+// These are fallbacks if module routes aren't loaded
 
 // ============================================================
 // ERROR ROUTES
@@ -811,6 +857,22 @@ $router->any('/403', 'ErrorController@forbidden', ['name' => 'error.403']);
 
 // 500 Internal Server Error handler
 $router->any('/500', 'ErrorController@serverError', ['name' => 'error.500']);
+
+// ============================================================
+// HEALTH CHECK ROUTE (No authentication)
+// ============================================================
+
+$router->get('/health', function() {
+    http_response_code(200);
+    header('Content-Type: application/json');
+    echo json_encode([
+        'status' => 'healthy',
+        'timestamp' => date('Y-m-d H:i:s'),
+        'version' => APP_VERSION,
+        'environment' => APP_ENV
+    ]);
+    exit;
+});
 
 // ============================================================
 // EXPORT ROUTER
