@@ -487,29 +487,19 @@ define('LANGUAGE_ENGLISH', 'en');
 define('LANGUAGE_URDU', 'ur');
 define('LANGUAGE_EN_PK', 'en_PK');
 
-define('SUPPORTED_LANGUAGES', [
-    LANGUAGE_ENGLISH => 'English',
-    LANGUAGE_URDU => 'Urdu',
-    LANGUAGE_EN_PK => 'English (Pakistan)',
-]);
-
+// NOTE: SUPPORTED_LANGUAGES is already defined in config/config.php (loaded
+// before this file), so it is intentionally NOT redefined here to avoid a
+// "Constant already defined" fatal error.
 define('DEFAULT_LANGUAGE_CODE', LANGUAGE_ENGLISH);
 
 // ============================================================
 // DATE & TIME FORMATS (ISO Standards)
 // ============================================================
-
-define('DATE_FORMAT', 'Y-m-d');
-define('DATE_FORMAT_DISPLAY', 'd M Y');
-define('DATE_FORMAT_FULL', 'l, d F Y');
-define('DATE_FORMAT_ISO', 'Y-m-d');
-define('TIME_FORMAT', 'H:i:s');
-define('TIME_FORMAT_12H', 'h:i A');
-define('DATETIME_FORMAT', 'Y-m-d H:i:s');
-define('DATETIME_FORMAT_DISPLAY', 'd M Y h:i A');
-define('DATETIME_FORMAT_ISO', 'Y-m-d\TH:i:sP');
-define('DATE_PICKER_FORMAT', 'yyyy-mm-dd');
-define('TIME_PICKER_FORMAT', 'HH:mm');
+// NOTE: DATE_FORMAT, DATE_FORMAT_DISPLAY, DATE_FORMAT_FULL, DATE_FORMAT_ISO,
+// TIME_FORMAT, TIME_FORMAT_12H, DATETIME_FORMAT, DATETIME_FORMAT_DISPLAY,
+// DATETIME_FORMAT_ISO, DATE_PICKER_FORMAT and TIME_PICKER_FORMAT are already
+// defined in config/config.php. Redefining them here previously caused a
+// fatal "Constant already defined" error on every single request.
 
 // ============================================================
 // FILE UPLOAD LIMITS
@@ -581,7 +571,7 @@ define('DEFAULT_AVATAR', 'default-avatar.png');
 define('DEFAULT_AVATAR_PATH', '/assets/images/default-avatar.png');
 define('DEFAULT_LOGO', 'logo.png');
 define('DEFAULT_LOGO_PATH', '/assets/images/logo.png');
-define('DEFAULT_FAVICON', 'favicon.ico');
+// NOTE: DEFAULT_FAVICON is already defined in config/config.php.
 define('DEFAULT_FAVICON_PATH', '/favicon.ico');
 define('DEFAULT_PAGE_TITLE', 'AI Banking GRC Platform');
 
@@ -603,11 +593,8 @@ define('DASHBOARD_ACTIVITY_LIMIT', 10);
 // AI CONSTANTS
 // ============================================================
 
-define('AI_MAX_TOKENS', 4096);
-define('AI_TEMPERATURE', 0.7);
-define('AI_TOP_P', 0.9);
-define('AI_FREQUENCY_PENALTY', 0.0);
-define('AI_PRESENCE_PENALTY', 0.0);
+// NOTE: AI_MAX_TOKENS, AI_TEMPERATURE, AI_TOP_P, AI_FREQUENCY_PENALTY and
+// AI_PRESENCE_PENALTY are already defined in config/config.php.
 
 define('AI_USE_CASE_SUMMARIZE', 'summarize');
 define('AI_USE_CASE_ANALYZE', 'analyze');
@@ -790,13 +777,10 @@ define('COOKIE_SAMESITE', 'Strict');
 // API RATE LIMITING
 // ============================================================
 
-define('RATE_LIMIT_GENERAL', 100);
-define('RATE_LIMIT_AUTH', 10);
-define('RATE_LIMIT_API', 60);
-define('RATE_LIMIT_LOGIN', 5);
+// NOTE: RATE_LIMIT_GENERAL, RATE_LIMIT_AUTH, RATE_LIMIT_API, RATE_LIMIT_LOGIN,
+// RATE_LIMIT_WINDOW and RATE_LIMIT_BLOCK_DURATION are already defined in
+// config/config.php. Only RATE_LIMIT_REGISTER is new here.
 define('RATE_LIMIT_REGISTER', 3);
-define('RATE_LIMIT_WINDOW', 60);
-define('RATE_LIMIT_BLOCK_DURATION', 300);
 
 // ============================================================
 // PAGINATION CONSTANTS
@@ -812,4 +796,47 @@ define('PAGINATION_LIMIT_OPTIONS', [10, 15, 25, 50, 100]);
 // ============================================================
 
 define('EXPORT_FORMAT_PDF', 'pdf');
-define
+define('EXPORT_FORMAT_CSV', 'csv');
+define('EXPORT_FORMAT_EXCEL', 'xlsx');
+define('EXPORT_FORMAT_JSON', 'json');
+define('EXPORT_FORMAT_XML', 'xml');
+define('EXPORT_FORMAT_PRINT', 'print');
+
+define('EXPORT_FORMATS', [
+    EXPORT_FORMAT_PDF => 'PDF Document',
+    EXPORT_FORMAT_CSV => 'CSV Spreadsheet',
+    EXPORT_FORMAT_EXCEL => 'Excel Spreadsheet',
+    EXPORT_FORMAT_JSON => 'JSON Data',
+    EXPORT_FORMAT_XML => 'XML Data',
+]);
+
+define('EXPORT_DEFAULT_FORMAT', EXPORT_FORMAT_PDF);
+define('EXPORT_MAX_ROWS', 50000);
+define('EXPORT_CHUNK_SIZE', 1000);
+define('EXPORT_TEMP_PATH', BASE_PATH . DS . 'storage' . DS . 'temp');
+
+// ============================================================
+// NOTIFICATION CONSTANTS
+// ============================================================
+
+define('NOTIFICATION_TYPE_INFO', 'info');
+define('NOTIFICATION_TYPE_SUCCESS', 'success');
+define('NOTIFICATION_TYPE_WARNING', 'warning');
+define('NOTIFICATION_TYPE_DANGER', 'danger');
+define('NOTIFICATION_TYPE_REMINDER', 'reminder');
+
+define('NOTIFICATION_TYPES', [
+    NOTIFICATION_TYPE_INFO => 'Info',
+    NOTIFICATION_TYPE_SUCCESS => 'Success',
+    NOTIFICATION_TYPE_WARNING => 'Warning',
+    NOTIFICATION_TYPE_DANGER => 'Danger',
+    NOTIFICATION_TYPE_REMINDER => 'Reminder',
+]);
+
+define('NOTIFICATION_CHANNEL_SYSTEM', 'system');
+define('NOTIFICATION_CHANNEL_EMAIL', 'email');
+define('NOTIFICATION_CHANNEL_SMS', 'sms');
+
+// ============================================================
+// END OF CONSTANTS
+// ============================================================
