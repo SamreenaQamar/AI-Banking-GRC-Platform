@@ -105,7 +105,6 @@ class UserService
     public function create(array $data, int $createdBy): array
     {
         try {
-            // Validate input
             $rules = [
                 'username' => ['required', 'min:3', 'max:50', 'unique:users,username'],
                 'email' => ['required', 'email', 'unique:users,email'],
@@ -123,7 +122,6 @@ class UserService
                 ]);
             }
 
-            // Check if user already exists
             if ($this->userModel->findByUsername($data['username'])) {
                 return $this->errorResponse('Username already taken.', 'USERNAME_TAKEN');
             }
@@ -132,10 +130,8 @@ class UserService
                 return $this->errorResponse('Email already registered.', 'EMAIL_TAKEN');
             }
 
-            // Hash password
             $hashedPassword = $this->auth->hashPassword($data['password']);
 
-            // Create user
             $userData = [
                 'username' => $data['username'],
                 'email' => $data['email'],
@@ -162,10 +158,8 @@ class UserService
                 return $this->errorResponse('Failed to create user.', 'CREATE_FAILED');
             }
 
-            // Log activity
             $this->activityLogModel->logCreate($createdBy, 'users', 'user', $userId, $userData);
 
-            // Send welcome email
             if (isset($data['send_welcome']) && $data['send_welcome']) {
                 $this->mail->sendWelcome($data['email'], $data['first_name'], $data['username']);
             }
@@ -202,7 +196,6 @@ class UserService
                 return $this->errorResponse('User not found.', 'USER_NOT_FOUND');
             }
 
-            // Validate input
             $rules = [
                 'username' => ['required', 'min:3', 'max:50', 'unique:users,username,' . $userId],
                 'email' => ['required', 'email', 'unique:users,email,' . $userId],
@@ -219,20 +212,6 @@ class UserService
                 ]);
             }
 
-            // Check if username or email is taken
-            if (isset($data['username']) && $data['username'] !== $user->username) {
-                if ($this->userModel->findByUsername($data['username'])) {
-                    return $this->errorResponse('Username already taken.', 'USERNAME_TAKEN');
-                }
-            }
-
-            if (isset($data['email']) && $data['email'] !== $user->email) {
-                if ($this->userModel->findByEmail($data['email'])) {
-                    return $this->errorResponse('Email already registered.', 'EMAIL_TAKEN');
-                }
-            }
-
-            // Prepare update data
             $updateData = [];
             $allowedFields = ['username', 'email', 'first_name', 'last_name', 'role_id', 'status', 
                              'mobile', 'employee_id', 'phone', 'address', 'city', 'state', 'postal_code', 'country'];
@@ -243,7 +222,6 @@ class UserService
                 }
             }
 
-            // Update password if provided
             if (!empty($data['password'])) {
                 if (strlen($data['password']) < 8) {
                     return $this->errorResponse('Password must be at least 8 characters.', 'INVALID_PASSWORD');
@@ -259,10 +237,8 @@ class UserService
                 return $this->errorResponse('Failed to update user.', 'UPDATE_FAILED');
             }
 
-            // Log activity
             $this->activityLogModel->logChange($updatedBy, 'users', 'user', $userId, (array)$user, $updateData);
 
-            // Clear cache
             $this->authorization->clearUserCache($userId);
 
             $this->logger->info('User updated', [
@@ -293,7 +269,6 @@ class UserService
                 return $this->errorResponse('User not found.', 'USER_NOT_FOUND');
             }
 
-            // Prevent self-deletion
             if ($userId === $deletedBy) {
                 return $this->errorResponse('Cannot delete your own account.', 'SELF_DELETE');
             }
@@ -304,10 +279,8 @@ class UserService
                 return $this->errorResponse('Failed to delete user.', 'DELETE_FAILED');
             }
 
-            // Log activity
             $this->activityLogModel->logDelete($deletedBy, 'users', 'user', $userId, (array)$user);
 
-            // Clear cache
             $this->authorization->clearUserCache($userId);
 
             $this->logger->info('User deleted', [
@@ -333,12 +306,10 @@ class UserService
     {
         try {
             $user = $this->userModel->find($userId);
-
             if (!$user) {
                 return $this->errorResponse('User not found.', 'USER_NOT_FOUND');
             }
 
-            // Get role and permissions
             $role = $this->roleModel->find($user->role_id);
             $permissions = $this->authorization->getUserPermissions($userId);
 
@@ -435,8 +406,7 @@ class UserService
                 return $this->errorResponse('Failed to update status.', 'UPDATE_FAILED');
             }
 
-            // Log activity
-            $this->activityLogModel->logAction($updatedBy, 'status_change', 'users', 
+            $this->activityLogModel->logAction($updatedBy, 'status_change', 'users',
                 "User status changed from {$user->status} to {$status}");
 
             $this->logger->info('User status updated', [
@@ -481,11 +451,9 @@ class UserService
                 return $this->errorResponse('Failed to assign role.', 'ASSIGN_FAILED');
             }
 
-            // Log activity
             $this->activityLogModel->logAction($assignedBy, 'role_assign', 'users',
                 "Role {$role->name} assigned to user {$user->username}");
 
-            // Clear cache
             $this->authorization->clearUserCache($userId);
 
             $this->logger->info('Role assigned to user', [
@@ -516,147 +484,21 @@ class UserService
                 return $this->errorResponse('User not found.', 'USER_NOT_FOUND');
             }
 
-            // Get additional data
             $role = $this->roleModel->find($user->role_id);
             $permissions = $this->authorization->getUserPermissions($userId);
             $activities = $this->activityLogModel->getUserActivities($userId, 10);
-            $stats = $this->getUserStats($userId);
 
             return $this->successResponse('User profile retrieved.', [
                 'user' => $user,
                 'role' => $role,
                 'permissions' => $permissions,
-                'recent_activities' => $activities,
-                'stats' => $stats
+                'recent_activities' => $activities
             ]);
 
         } catch (\Exception $e) {
             $this->logger->error('Profile error: ' . $e->getMessage());
             return $this->errorResponse('An error occurred.', 'ERROR');
         }
-    }
-
-    /**
-     * Update user profile
-     * 
-     * @param int $userId
-     * @param array $data
-     * @return array
-     */
-    public function updateProfile(int $userId, array $data): array
-    {
-        try {
-            $user = $this->userModel->find($userId);
-            if (!$user) {
-                return $this->errorResponse('User not found.', 'USER_NOT_FOUND');
-            }
-
-            $allowedFields = ['first_name', 'last_name', 'phone', 'mobile', 'address', 'city', 'state', 'postal_code', 'country'];
-            $updateData = [];
-
-            foreach ($allowedFields as $field) {
-                if (isset($data[$field])) {
-                    $updateData[$field] = $data[$field];
-                }
-            }
-
-            if (empty($updateData)) {
-                return $this->errorResponse('No fields to update.', 'NO_DATA');
-            }
-
-            $result = $this->userModel->update($userId, $updateData);
-
-            if (!$result) {
-                return $this->errorResponse('Failed to update profile.', 'UPDATE_FAILED');
-            }
-
-            $this->logger->info('User profile updated', ['user_id' => $userId]);
-
-            return $this->successResponse('Profile updated successfully.');
-
-        } catch (\Exception $e) {
-            $this->logger->error('Update profile error: ' . $e->getMessage());
-            return $this->errorResponse('An error occurred.', 'ERROR');
-        }
-    }
-
-    /**
-     * Update user avatar
-     * 
-     * @param int $userId
-     * @param array $file
-     * @return array
-     */
-    public function updateAvatar(int $userId, array $file): array
-    {
-        try {
-            $user = $this->userModel->find($userId);
-            if (!$user) {
-                return $this->errorResponse('User not found.', 'USER_NOT_FOUND');
-            }
-
-            // Validate file
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-            $maxSize = 2 * 1024 * 1024; // 2MB
-
-            if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
-                return $this->errorResponse('File upload error.', 'UPLOAD_ERROR');
-            }
-
-            if ($file['size'] > $maxSize) {
-                return $this->errorResponse('File size exceeds 2MB limit.', 'FILE_TOO_LARGE');
-            }
-
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mimeType = finfo_file($finfo, $file['tmp_name']);
-            finfo_close($finfo);
-
-            if (!in_array($mimeType, $allowedTypes)) {
-                return $this->errorResponse('Invalid file type. Allowed: JPEG, PNG, GIF, WebP.', 'INVALID_TYPE');
-            }
-
-            // Generate filename and save
-            $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-            $filename = 'avatar_' . $userId . '_' . time() . '.' . $extension;
-            $uploadPath = UPLOADS_PATH . '/avatars/';
-
-            if (!is_dir($uploadPath)) {
-                mkdir($uploadPath, 0755, true);
-            }
-
-            $targetPath = $uploadPath . $filename;
-            move_uploaded_file($file['tmp_name'], $targetPath);
-
-            // Update user record
-            $this->userModel->update($userId, ['profile_image' => 'avatars/' . $filename]);
-
-            $this->logger->info('User avatar updated', ['user_id' => $userId]);
-
-            return $this->successResponse('Avatar updated successfully.', [
-                'avatar' => 'avatars/' . $filename
-            ]);
-
-        } catch (\Exception $e) {
-            $this->logger->error('Update avatar error: ' . $e->getMessage());
-            return $this->errorResponse('An error occurred.', 'ERROR');
-        }
-    }
-
-    /**
-     * Get user statistics
-     * 
-     * @param int $userId
-     * @return array
-     */
-    private function getUserStats(int $userId): array
-    {
-        return [
-            'total_activities' => $this->activityLogModel->countByUser($userId),
-            'last_login' => $this->userModel->getLastLogin($userId),
-            'total_compliance' => 0, // Will be implemented in ComplianceService
-            'total_risks' => 0, // Will be implemented in RiskService
-            'total_audits' => 0 // Will be implemented in AuditService
-        ];
     }
 
     /**
